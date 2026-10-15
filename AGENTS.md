@@ -8,12 +8,15 @@
 | --- | --- | --- |
 | 共享规范 | content-and-judgment.md、language.md、structure-and-formatting.md、ssot-and-concept-cleanup.md、红线表 | audit 与 guide 共同引用 |
 | 审查行为 | self-check.md 主体、lint 的语言/内容检查 | 形成 academic-writing-audit 工作流 |
-| 写作行为 | SKILL.md 中的起草/改写/扩写/压缩/润色 | 为 guide 提供边界；正面方法需新写 |
+| 写作行为 | 原根 SKILL.md 中的起草/改写/扩写/压缩/润色 | 为 guide 提供边界；正面方法需新写 |
 | 文档工具 | latex-mechanics.md、lint 的标签/引用/编译相关、assets/ | audit 按需调用，不强制拆分 |
 
 ## 结构
 
+- 根 `SKILL.md`：薄入口，只负责路由，不含具体规则或审查流程。
 - `skills/<name>/SKILL.md`：可独立发现的 Skill 入口。
+  - `academic-writing-audit`：规则审查（扫描已有文稿）
+  - `academic-writing-guide`：正面写作指导（待建）
 - `shared/rules/`：规则权威源。禁止在 Skill 内复制条文。
 - `scripts/`：机械检查与构建脚本。
 - `assets/`：模板。
