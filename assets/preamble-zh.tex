@@ -1,0 +1,53 @@
+% 中文正式文稿 preamble 模板（按项目调整后放入文稿目录）
+% 编译：xelatex 或 lualatex（中文文档不要用 pdflatex）
+% 入口示例：\documentclass[UTF8,a4paper,10pt,oneside,openany,fontset=fandol]{ctexbook}
+%           \input{preamble.tex}
+
+\usepackage[margin=2.6cm]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage[
+  sorting=nyt,
+  sortcites=true,
+  maxbibnames=6,
+  giveninits=true,
+  doi=false,
+  isbn=false
+]{biblatex}
+
+% 文献常含长 URL，两端对齐会出界
+\AtBeginBibliography{\raggedright}
+
+% 中文正文含不可断开的长英文标识符，给断行留余量
+\setlength{\emergencystretch}{5em}
+\setstretch{1.08}
+\captionsetup{font=small,labelfont=bf,labelsep=quad}
+\hypersetup{hidelinks}
+
+% 章接排，不另起页；标题字体交给 ctex
+\pagestyle{plain}
+\ctexset{
+  chapter={format=\LARGE\heiti,break={\par},beforeskip=3ex,afterskip=2ex,fixskip=true},
+  section/format=\Large\heiti,
+  subsection/format=\large\heiti
+}
+
+% 列型：L{宽} 定宽左对齐；Y 自适应左对齐；V{权重} 按内容量加权的 Y 列。
+% 同一张表内各 V 权重之和应等于该表 V 列的列数，否则列宽计算失衡。
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{V}[1]{>{\hsize=#1\hsize}Y}
+
+% 图件样式集中在 preamble，各图只覆写尺寸与间距（可选）
+\usetikzlibrary{arrows.meta,backgrounds,calc,fit,positioning}
+% \definecolor{Ink}{HTML}{24323A}
+% \definecolor{Rule}{HTML}{C9D4D8}
+% \tikzset{
+%   box/.style={draw,rounded corners,align=flush center,font=\small,inner xsep=3pt,inner ysep=4pt},
+%   arrow/.style={-{Stealth[length=2mm]},thick}
+% }
