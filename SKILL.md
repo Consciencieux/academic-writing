@@ -24,15 +24,15 @@ compatibility: >-
 
 用于学术论文、研究报告、开题与结题材料、方案、总结、说明、调研、分析的起草、改写、扩写、压缩与润色。当前以 LaTeX 为主要实现层，规则本身不依赖具体排版工具；不用于代码、配置和纯数据文件。
 
-只调字号、页边距等版式微调时不必跑内容与语言自检，但版式调整同样不得改变信息顺序、事实、数字、引用关系或判断含义（见 `references/structure-and-formatting.md` §15）。
+只调字号、页边距等版式微调时不必跑内容与语言自检，但版式调整同样不得改变信息顺序、事实、数字、引用关系或判断含义（见 `shared/rules/structure-and-formatting.md` §15）。
 
 ## 工作顺序
 
 1. **定内容与判断**：要回答什么问题；哪些事实直接相关；事实如何支持判断；判断适用于什么范围。不要先生成漂亮结论再找理由。
 2. **定结构**：按信息关系与阅读顺序安排章节，需要什么写什么，不套固定目录。
-3. **落笔**：会变的值走宏或生成文件，文献走 `.bib`，不在正文写死（当前实现层为 LaTeX，写法见 `references/latex-mechanics.md`）。
+3. **落笔**：会变的值走宏或生成文件，文献走 `.bib`，不在正文写死（当前实现层为 LaTeX，写法见 `shared/rules/latex-mechanics.md`）。
 4. **机械检查**：跑 `scripts/lint_tex.py`，先清掉可自动发现的问题（见下）。
-5. **逐条自检**：按 `references/self-check.md` 过一遍语义、证据与判断。
+5. **逐条自检**：按 `shared/rules/self-check.md` 过一遍语义、证据与判断。
 6. **润色放最后**：内容或判断有问题时，润色解决不了。
 
 ## 优先级
@@ -56,7 +56,7 @@ compatibility: >-
 | 留下已移除概念的引用 | 删除是完全语义删除，不是替换说明 | G |
 | 用组织动作充当正文 | 「本节将……」「下面介绍……」只在确实需要导航时保留 | L§14 |
 
-`C§n` = `references/content-and-judgment.md` 的对应小节；`L§n` = `references/language.md`；`G` = `references/ssot-and-concept-cleanup.md`。
+`C§n` = `shared/rules/content-and-judgment.md` 的对应小节；`L§n` = `shared/rules/language.md`；`G` = `shared/rules/ssot-and-concept-cleanup.md`。
 
 ## 按需加载
 
@@ -64,12 +64,12 @@ compatibility: >-
 
 | 文件 | 读它，当…… |
 | --- | --- |
-| `references/content-and-judgment.md` | 要新增数据、结论、比较或因果表述；核对证据口径与判断强度 |
-| `references/structure-and-formatting.md` | 要增删章节、调整篇幅、重排结构、加表格或图；处理跨章重复与空栏目 |
-| `references/language.md` | 只改措辞；模板腔、语义重复、否定尾巴、括号堆叠；工程文档或聊天内容混入正文 |
-| `references/ssot-and-concept-cleanup.md` | 同一事实有多处维护点；删除了概念或组件；要让正文只描述当前状态 |
-| `references/latex-mechanics.md` | 写宏、`.bib`、三线表、图件、交叉引用；配置编译与核对警告 |
-| `references/self-check.md` | 交付前逐条核对（按内容／结构／语言／治理／LaTeX 分组） |
+| `shared/rules/content-and-judgment.md` | 要新增数据、结论、比较或因果表述；核对证据口径与判断强度 |
+| `shared/rules/structure-and-formatting.md` | 要增删章节、调整篇幅、重排结构、加表格或图；处理跨章重复与空栏目 |
+| `shared/rules/language.md` | 只改措辞；模板腔、语义重复、否定尾巴、括号堆叠；工程文档或聊天内容混入正文 |
+| `shared/rules/ssot-and-concept-cleanup.md` | 同一事实有多处维护点；删除了概念或组件；要让正文只描述当前状态 |
+| `shared/rules/latex-mechanics.md` | 写宏、`.bib`、三线表、图件、交叉引用；配置编译与核对警告 |
+| `shared/rules/self-check.md` | 交付前逐条核对（按内容／结构／语言／治理／LaTeX 分组） |
 
 ## 脚本
 
@@ -83,7 +83,7 @@ python3 scripts/lint_tex.py <文稿目录或 main.tex>
 python3 scripts/lint_tex.py <文稿目录> --severity error
 ```
 
-退出码 0 表示无命中、1 表示有命中。项目级检查从 `\documentclass` 根文件沿 `\input`／`\include` 展开，所以 `chapters/*.tex` 这类未被引用的历史拆分文件不会被算成重复标签，而会被单独提示为「第二维护点」。语义、证据与判断仍须按 `references/` 人工核对。
+退出码 0 表示无命中、1 表示有命中。项目级检查从 `\documentclass` 根文件沿 `\input`／`\include` 展开，所以 `chapters/*.tex` 这类未被引用的历史拆分文件不会被算成重复标签，而会被单独提示为「第二维护点」。语义、证据与判断仍须按 `shared/rules/` 人工核对。
 
 ## 模板
 
