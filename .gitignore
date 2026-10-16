@@ -1,9 +1,5 @@
-# macOS
 .DS_Store
-
-# Python
 __pycache__/
 *.pyc
-
-# Local packaging output
 dist/
+evals/runs/

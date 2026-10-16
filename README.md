@@ -1,60 +1,50 @@
-# 学术写作 Skill 体系
+# Academic Writing
 
-面向 AI 的学术写作工作流：总入口负责路由，Guide 以正向方法生成正文，Audit 独立检查已有文稿；具体判定规范只在 `shared/rules/` 维护一次。
+学术论文写作与审查的三 Skill 体系。以论证、证据和读者理解组织文章，避免依赖反复“生成—全篇检查—局部补丁”。
 
-## 结构
+## 使用哪一个入口
 
-```text
-academic-writing/
-├── SKILL.md                               # 源码仓库总入口（薄路由）
-├── skills/
-│   ├── academic-writing/SKILL.md          # 可独立发现的总入口
-│   ├── academic-writing-guide/
-│   │   ├── SKILL.md                       # 核心写作契约与规则加载
-│   │   └── references/                   # 章节方法、修订方法、示例
-│   └── academic-writing-audit/
-│       ├── SKILL.md                       # 局部/全文审查入口
-│       └── references/                   # 全文审查方法
-├── shared/rules/                          # 规则权威来源（SSOT）
-├── scripts/lint_tex.py                    # LaTeX 机械检查
-├── scripts/package_skills.py              # 独立 Skill 安装包生成
-├── assets/                                # 中文 LaTeX 模板
-└── tests/manual-evals.md                  # 人工验收场景
-```
+| 任务 | Skill | 产物 |
+| --- | --- | --- |
+| 起草、续写、修改、篇幅规划、文献综合、图表、投稿整理 | academic-writing-guide | 实际正文/源文件及必要修改说明 |
+| 全文通读、跨章结构与重复、证据/文献/图表检查 | academic-writing-audit | 只读诊断与明确处理判断 |
+| 多步骤写作或检查后修订 | academic-writing | 协调上述角色，不另写一套方法 |
 
-## 如何使用
+Guide 是正文的唯一编辑角色。Audit 可以给改法示例，但不修改文稿；联合请求由协调入口接续 Guide，不再让用户重复授权同一修改范围。角色不等于独立进程，不要求多 Agent。
 
-- **论文起草、改写、扩写、压缩或润色**：调用 `academic-writing-guide`。它在开始时读取适用的事实、语言与结构规则，先组织论证再生成正文。
-- **整篇论文通读、检查章节职责/重复/篇幅/工程材料泄露**：调用 `academic-writing-audit` 的全文模式。长篇文稿可以分批读，但未实际读完不能宣称完成全文审查。
-- **从研究问题开始规划全流程**：调用 `academic-writing` 总入口，由它路由到 Guide 或 Audit。
+## 内容怎么拆
 
-独立审查不是每一段写作的默认步骤。规范用于写作过程中形成成熟文本，Audit 留给用户指定的审查、完整章节、重大结构变化和交付前检查。
+- [共享核心](shared/core.md)：短的共同底线，自动同步到 Guide/Audit 入口。
+- `shared/standards/`：按证据、组织、语言、图表、引证和事实一致性维护唯一判定标准；同时包含硬约束、条件要求和可调整默认值。
+- `skills/academic-writing-guide/references/`：按当前要做的写作决定提供方法，文章各章节作为第二导航轴。
+- `shared/protocols/`、`shared/tooling/`：上下文与角色交接、文稿工具的操作方式。
+- `evals/`、`tests/`：模型行为用例与确定性测试；二者的通过含义不同。
 
-## 本地生成可安装包
+篇幅归论证与章节规划，图表及引证有专项方法；它们不是独立 Skill。规则不按“正面/负面”分库，审查清单不另抄一套判定条文。详见[架构](docs/architecture.md)和[原规则归属](docs/coverage.md)。
 
-需 Python 3.8+，不需要第三方依赖：
+## 安装
 
 ```bash
-python3 scripts/package_skills.py --check-only
-python3 scripts/package_skills.py --output-dir dist
+python scripts/package_skills.py --check-only
+python scripts/package_skills.py --output-dir dist
 ```
 
-生成三个 ZIP：
+默认使用 `dist/academic-writing-skills.zip`：解压后为三个并列的完整 Skill 目录，放入客户端实际支持的 Skills 目录。具体激活方式以客户端为准。`guide.zip` 和 `audit.zip` 的完整文件名分别为 `academic-writing-guide.zip`、`academic-writing-audit.zip`，用于只需要该角色的场景；专项包不假装另一角色已经安装。
 
-- `academic-writing-guide.zip`：可单独安装的 Guide，包含它需要的共享规则。
-- `academic-writing-audit.zip`：可单独安装的 Audit，包含共享规则、lint 脚本和模板。
-- `academic-writing-skills.zip`：包含并列的 `academic-writing`、`academic-writing-guide`、`academic-writing-audit` 三个 Skill 目录。
+仓库根 [SKILL.md](SKILL.md) 是唯一的协调入口源码。构建时把它放入 `academic-writing/`，不再维护第二份同名源码入口。所有安装包包含所需规则、方法、脚本和模板；构建器改写并验证真实相对链接，执行时不用猜两套资源根。
 
-单 Skill ZIP 包含唯一的同名顶层目录，适合按 Agent Skills 格式安装。合集 ZIP 解压后是三个并列的 Skill 目录；对支持本地文件系统技能目录发现的客户端，可将它们放入该客户端扫描的 Skills 目录。具体发现位置和激活方式以客户端文档为准。
+仅复制 SKILL.md 不构成安装。直接从源码使用时应保留整个仓库布局。把[论文项目指令片段](assets/project-AGENTS.snippet.md)合并进论文自己的 AGENTS.md，可帮助持续选中正确角色；不要用本仓库的维护 AGENTS.md 覆盖论文项目。
 
-**共享规则仍然只有一个源码维护点**：`shared/rules/`。打包时生成的 `references/rules/` 是发布产物中的只读副本，不回填到源码仓库；它让 Skill 离开本仓库后仍能访问规则。
+## 维护与验证
 
-对于直接使用源代码目录的 Agent，Guide 与 Audit 将从 `../../shared/rules/` 寻找规则；独立包中的它们从 `references/rules/` 寻找。仅复制单个 `SKILL.md` 文件不能构成完整安装。
+修改共享核心后运行 `python scripts/package_skills.py --sync`，提交生成后的入口。标准使用稳定 ID 和显式锚点，修改口径同时更新覆盖记录、行为用例和 CHANGELOG。
 
-## 校验与发版
+```bash
+python -m unittest discover -s tests -v
+python scripts/package_skills.py --check-only
+python scripts/package_skills.py --output-dir dist
+```
 
-GitHub PR 和推送到 `main` 会执行 `Validate Skills`，校验 Skills 和打包结构。正式 Release 由 `v*` 标签触发；发版前先在 `CHANGELOG.md` 添加与标签匹配的版本条目。
+[评估方案](evals/README.md)提供固定材料、任务和预期，包括正常表达的误报反例。自动测试可以检查包的结构与工具行为，不能证明模型初稿质量提高。请分别保留工具测试与真实模型运行记录，不把其中一种冒充另一种。
 
-可用 [人工验收用例](tests/manual-evals.md) 检查模型是否真的读取文件、正确路由并处理跨章节语义问题。规则加载和执行规范可以提高一致性，但仍应通过实际论文结果检验效果。
-
-更多维护约定见 [AGENTS.md](AGENTS.md)。
+当前源包属于未发布的架构重整，不包含伪造的模型评测分数。迁移自 PR4 的方式见[迁移说明](docs/migration-pr4.md)。

@@ -1,55 +1,40 @@
 name: Release
-
-# 推送 v* 标签后，从仓库唯一的 shared/rules/ 权威源生成安装包。
-# 单 Skill ZIP 只有一层 Skill 目录；合集 ZIP 包含三个并列 Skill 目录。
-
 on:
   push:
-    tags:
-      - "v*"
-
+    tags: ['v*']
 permissions:
   contents: write
-
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
-      - name: 检查版本与技能资源
+      - name: Match release to changelog
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          set -euo pipefail
-          VERSION="${RELEASE_TAG#v}"
-          if [ "$VERSION" = "$RELEASE_TAG" ]; then
-            echo "ERROR: 只接受 v 前缀标签" >&2
-            exit 1
-          fi
-          if ! grep -qF "## [${VERSION}] - " CHANGELOG.md; then
-            echo "ERROR: CHANGELOG.md 缺少版本 ${VERSION} 的正式条目" >&2
-            exit 1
-          fi
-          python3 scripts/package_skills.py --check-only
-
-      - name: 打包独立 Skills 与合集
-        run: |
-          set -euo pipefail
-          python3 scripts/package_skills.py --output-dir dist
-          (cd dist && sha256sum *.zip > SHA256SUMS)
-          echo '发布产物：'
-          ls -lh dist/*.zip dist/SHA256SUMS
-
-      - name: 创建或更新 GitHub Release
+          python - <<'PYCODE'
+          import os, pathlib, re
+          tag = os.environ['RELEASE_TAG']
+          if not re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?', tag):
+              raise SystemExit('Expected vMAJOR.MINOR.PATCH[-prerelease]')
+          marker = '## [' + tag[1:] + '] - '
+          if not any(line.startswith(marker) for line in pathlib.Path('CHANGELOG.md').read_text().splitlines()):
+              raise SystemExit('Missing matching dated changelog entry')
+          PYCODE
+      - name: Regression tests
+        run: python -m unittest discover -s tests -v
+      - name: Build verified packages
+        run: python scripts/package_skills.py --output-dir dist
+      - name: Publish exact artifacts
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
           set -euo pipefail
+          ASSETS=(dist/academic-writing-guide.zip dist/academic-writing-audit.zip dist/academic-writing-skills.zip dist/SHA256SUMS)
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            gh release upload "$RELEASE_TAG" dist/*.zip dist/SHA256SUMS --clobber
+            gh release upload "$RELEASE_TAG" "${ASSETS[@]}" --clobber
           else
-            gh release create "$RELEASE_TAG" dist/*.zip dist/SHA256SUMS \
-              --title "$RELEASE_TAG" --generate-notes
+            gh release create "$RELEASE_TAG" "${ASSETS[@]}" --title "$RELEASE_TAG" --generate-notes
           fi

@@ -1,0 +1,648 @@
+{
+  "base_pr4": "5f79dc1df2e704d0f7cb93dc97641065382a3429",
+  "source_files": {
+    "content-and-reasoning.md": {
+      "sha256": "6f4ec1d706e60a0bd50987b7feba10c627d8e5f69ae5c47409a81c4657c9198d",
+      "section_count": 21
+    },
+    "document-structure-and-formatting.md": {
+      "sha256": "c2323f5539e9003bc038ac6ef8f8d6b4537b1e4f02caed48c1d7acae8b4fd41a",
+      "section_count": 17
+    },
+    "documentation-governance.md": {
+      "sha256": "c8fea39a229bf264c385eed7e26934b5301bfb01a33a27e3a18766b44ead6d07",
+      "section_count": 8
+    },
+    "removed-concept-cleanup.md": {
+      "sha256": "1ae78bf7fd89ae09e733810a0b8966128908c32775676a7186c4afb451c9cffc",
+      "section_count": 6
+    },
+    "writing-language.md": {
+      "sha256": "1d6a06db01f2e1a6e0b82915ab136bd17b724796e70b123577f0d77e1481db51",
+      "section_count": 17
+    }
+  },
+  "sections": [
+    {
+      "source": "content-and-reasoning.md",
+      "section": 1,
+      "heading": "适用范围",
+      "targets": [
+        "EVID-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 2,
+      "heading": "一、事实、推断、评价分开",
+      "targets": [
+        "EVID-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 3,
+      "heading": "二、证据决定结论强度",
+      "targets": [
+        "EVID-02"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 4,
+      "heading": "三、结论必须和范围匹配",
+      "targets": [
+        "EVID-02"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 5,
+      "heading": "四、区分不同不确定状态",
+      "targets": [
+        "EVID-03"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 6,
+      "heading": "五、零值、缺失值和空值严格区分",
+      "targets": [
+        "EVID-03"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 7,
+      "heading": "六、来源冲突不得静默解决",
+      "targets": [
+        "EVID-04"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 8,
+      "heading": "七、指标不能直接变成评价",
+      "targets": [
+        "EVID-08"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 9,
+      "heading": "八、比较和评价必须有对象",
+      "targets": [
+        "EVID-02"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 10,
+      "heading": "九、因果必须单独验证",
+      "targets": [
+        "EVID-05"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 11,
+      "heading": "十、结论应该从问题出发",
+      "targets": [
+        "EVID-01"
+      ],
+      "decision": "判定保留；正向步骤进入 Guide 论证设计。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 12,
+      "heading": "十一、结论不强求固定结构",
+      "targets": [
+        "ORG-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 13,
+      "heading": "十二、计算必须可复核",
+      "targets": [
+        "EVID-06"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 14,
+      "heading": "十三、异常优先于完整答案",
+      "targets": [
+        "EVID-03"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 15,
+      "heading": "十四、模型权限必须有限",
+      "targets": [
+        "EVID-01"
+      ],
+      "decision": "收束：禁止伪造事实，不禁止基于证据提出新推导、假设与理论结论。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 16,
+      "heading": "十五、任务目标优先于通用规则",
+      "targets": [
+        "ORG-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 17,
+      "heading": "十六、能力宣称必须有证据",
+      "targets": [
+        "EVID-08"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 18,
+      "heading": "十七、自我评价不能代替证据",
+      "targets": [
+        "EVID-08"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 19,
+      "heading": "十八、分类必须来自材料",
+      "targets": [
+        "EVID-08"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 20,
+      "heading": "十九、边界说明必须有触发理由",
+      "targets": [
+        "PROSE-05"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "content-and-reasoning.md",
+      "section": 21,
+      "heading": "二十、输出前检查",
+      "targets": [
+        "EVID-07"
+      ],
+      "decision": "检查行为进入 Audit，不保留第二套规范清单。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 1,
+      "heading": "适用范围",
+      "targets": [
+        "ORG-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 2,
+      "heading": "一、先内容，再结构，再版式",
+      "targets": [
+        "ORG-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 3,
+      "heading": "二、围绕真实问题组织文档",
+      "targets": [
+        "ORG-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 4,
+      "heading": "三、不同部分不要求同构",
+      "targets": [
+        "ORG-03"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 5,
+      "heading": "四、标题",
+      "targets": [
+        "ORG-05"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 6,
+      "heading": "五、段落",
+      "targets": [
+        "ORG-04"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 7,
+      "heading": "六、列表",
+      "targets": [
+        "ORG-05"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 8,
+      "heading": "七、表格",
+      "targets": [
+        "VIS-03"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 9,
+      "heading": "八、图、表、正文分工",
+      "targets": [
+        "VIS-01"
+      ],
+      "decision": "图注细化：必须含理解图所需条件、单位、符号与实际不确定性信息。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 10,
+      "heading": "九、重复表达",
+      "targets": [
+        "ORG-02"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 11,
+      "heading": "十、视觉层级",
+      "targets": [
+        "ORG-07"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 12,
+      "heading": "十一、数字、单位与精度",
+      "targets": [
+        "EVID-06"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 13,
+      "heading": "十二、来源与引用",
+      "targets": [
+        "CITE-02"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 14,
+      "heading": "十三、交叉引用",
+      "targets": [
+        "ORG-06"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 15,
+      "heading": "十四、空内容",
+      "targets": [
+        "ORG-05"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 16,
+      "heading": "十五、分页与视觉调整",
+      "targets": [
+        "ORG-07"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "document-structure-and-formatting.md",
+      "section": 17,
+      "heading": "十六、最终检查",
+      "targets": [
+        "ORG-02"
+      ],
+      "decision": "检查行为进入 Audit；标准按判断对象引用。"
+    },
+    {
+      "source": "documentation-governance.md",
+      "section": 1,
+      "heading": "1. 核心原则",
+      "targets": [
+        "CONS-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "documentation-governance.md",
+      "section": 2,
+      "heading": "2. 哪些内容应有权威来源",
+      "targets": [
+        "CONS-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "documentation-governance.md",
+      "section": 3,
+      "heading": "3. LaTeX 正文规则",
+      "targets": [
+        "CONS-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "documentation-governance.md",
+      "section": 4,
+      "heading": "4. 什么情况属于问题",
+      "targets": [
+        "CONS-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "documentation-governance.md",
+      "section": 5,
+      "heading": "5. 修改文档时",
+      "targets": [
+        "CONS-03"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "documentation-governance.md",
+      "section": 6,
+      "heading": "6. 对 Agent 的要求",
+      "targets": [
+        "CONS-03"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "documentation-governance.md",
+      "section": 7,
+      "heading": "7. 长期维护目标",
+      "targets": [
+        "CONS-03"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "documentation-governance.md",
+      "section": 8,
+      "heading": "8. 判断标准",
+      "targets": [
+        "CONS-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "removed-concept-cleanup.md",
+      "section": 1,
+      "heading": "Purpose",
+      "targets": [
+        "CONS-04"
+      ],
+      "decision": "限定为当前活动概念的清理；保留研究历史、消融、基线与有意保留的迁移记录。"
+    },
+    {
+      "source": "removed-concept-cleanup.md",
+      "section": 2,
+      "heading": "Rule",
+      "targets": [
+        "CONS-04"
+      ],
+      "decision": "限定为当前活动概念的清理；保留研究历史、消融、基线与有意保留的迁移记录。"
+    },
+    {
+      "source": "removed-concept-cleanup.md",
+      "section": 3,
+      "heading": "Forbidden Patterns",
+      "targets": [
+        "CONS-04"
+      ],
+      "decision": "限定为当前活动概念的清理；保留研究历史、消融、基线与有意保留的迁移记录。"
+    },
+    {
+      "source": "removed-concept-cleanup.md",
+      "section": 4,
+      "heading": "Execution Procedure",
+      "targets": [
+        "CONS-04"
+      ],
+      "decision": "限定为当前活动概念的清理；保留研究历史、消融、基线与有意保留的迁移记录。"
+    },
+    {
+      "source": "removed-concept-cleanup.md",
+      "section": 5,
+      "heading": "Exceptions",
+      "targets": [
+        "CONS-04"
+      ],
+      "decision": "限定为当前活动概念的清理；保留研究历史、消融、基线与有意保留的迁移记录。"
+    },
+    {
+      "source": "removed-concept-cleanup.md",
+      "section": 6,
+      "heading": "Agent Behavior",
+      "targets": [
+        "CONS-04"
+      ],
+      "decision": "限定为当前活动概念的清理；保留研究历史、消融、基线与有意保留的迁移记录。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 1,
+      "heading": "适用范围",
+      "targets": [
+        "PROSE-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 2,
+      "heading": "一、信息优先",
+      "targets": [
+        "PROSE-02"
+      ],
+      "decision": "收束：保留有阅读、指代、推理或导航功能的句子，不要求每句引入新事实。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 3,
+      "heading": "二、语义回环与同义反复",
+      "targets": [
+        "PROSE-02"
+      ],
+      "decision": "判定重复时同时考虑理解损失；不把必要解释机械删除。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 4,
+      "heading": "三、正常陈述，禁止模板腔",
+      "targets": [
+        "PROSE-01"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 5,
+      "heading": "四、句式与逻辑密度",
+      "targets": [
+        "PROSE-03"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 6,
+      "heading": "五、避免机械对仗和排比",
+      "targets": [
+        "PROSE-03"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 7,
+      "heading": "六、否定表达与防御性补充",
+      "targets": [
+        "PROSE-05"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 8,
+      "heading": "七、数字与公式",
+      "targets": [
+        "PROSE-06"
+      ],
+      "decision": "数据与判断次序按理解需要选择，不强制固定句序。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 9,
+      "heading": "八、术语与口语边界",
+      "targets": [
+        "PROSE-04"
+      ],
+      "decision": "术语与材料体裁分开；正常学科术语和以日志/对话为对象的研究可保留。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 10,
+      "heading": "九、引号、黑体和其他强调",
+      "targets": [
+        "PROSE-06"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 11,
+      "heading": "十、标题与开头",
+      "targets": [
+        "PROSE-08"
+      ],
+      "decision": "标题与开头规则拆开；必要背景和固定栏目正常保留。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 12,
+      "heading": "十一、抽象词与套话",
+      "targets": [
+        "PROSE-04"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 13,
+      "heading": "十二、反电报体与过度名词化",
+      "targets": [
+        "PROSE-04"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 14,
+      "heading": "十三、括号使用与尾部挂载信息",
+      "targets": [
+        "PROSE-06"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 15,
+      "heading": "十四、反元话语、反过程播报与主语重复",
+      "targets": [
+        "PROSE-08"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 16,
+      "heading": "十五、案例和具体对象的写法",
+      "targets": [
+        "PROSE-08"
+      ],
+      "decision": "保留其有效判定，归入单一主题标准；具体执行动作放入相应方法。"
+    },
+    {
+      "source": "writing-language.md",
+      "section": 17,
+      "heading": "十六、最终自检",
+      "targets": [
+        "PROSE-02"
+      ],
+      "decision": "自检行为进入 Audit；实际写作只做受影响范围校核。"
+    }
+  ]
+}

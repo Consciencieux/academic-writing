@@ -1,40 +1,6 @@
-% 元数据宏模板：同一事实只在这里定义一次，正文只引用（SSOT）
-%
-% 约定：
-%   1. 正文引用宏后加 {}，避免吞掉后续空格：\ReportAsOf{} 核对
-%   2. 宏内需要转义：% 写成 \%，_ 写成 \_，& 写成 \&
-%   3. 正文里不要再出现这些值的字面副本；配套 lint 会以 S-SSOT 报出重复值
-%   4. 只在「值本身基本就是这个数」时定义宏；把整句散文塞进宏会制造新的误用面
-%   5. 按报告类型取舍下面各组，不用的组直接删掉
-
-% --- 报告与项目字段 ---
-\newcommand{\ReportTitle}{报告标题}
-\newcommand{\ReportBatch}{2026}
-\newcommand{\ProjectName}{项目名称}
-\newcommand{\ProjectNumber}{X000000000000}
-
-% --- 时间与状态 ---
-\newcommand{\ReportAsOf}{2026-01-01}          % 进展核查截止日期
-\newcommand{\StageRecordDate}{2026-01-01}     % 阶段记录日期
-
-% --- 经费（按报告类型取舍）---
-\newcommand{\RequestedAmount}{10,000 元}      % 申报／申请
-\newcommand{\ApprovedAmount}{1,000 元}        % 获批，与申请分列
-\newcommand{\SelfFundAmount}{0 元}
-
-% --- 目标指标（注意 \% 转义）---
-\newcommand{\TargetConcurrentUsers}{100}
-\newcommand{\TargetResponseSeconds}{5}
-\newcommand{\TargetAccuracy}{90\%}
-
-% --- 代码／数据快照（不同时间的记录各自保留其版本，不要共用）---
-\newcommand{\SnapshotBase}{abc1234}
-\newcommand{\SnapshotCurrent}{def5678}
-
-% PDF 元数据应与正文口径一致
-\hypersetup{
-  pdftitle={\ReportTitle},
-  pdfauthor={作者或项目组},
-  pdfsubject={文稿主题},
-  pdfkeywords={}
-}
+% 同一可变事实仅定义一处。用项目实际值替换，不把示例值当研究事实。
+\newcommand{\PaperTitle}{论文标题}
+\newcommand{\PaperAuthor}{作者}
+% 需要匿名时同时按目标要求处理正文、元数据与关联文件。
+\hypersetup{pdftitle={\PaperTitle},pdfauthor={\PaperAuthor}}
+% 实验参数与指标从实际数据/配置生成；不要把不同事实的相同值合成一个宏。
