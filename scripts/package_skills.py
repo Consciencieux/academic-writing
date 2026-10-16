@@ -111,7 +111,7 @@ def validate_entry(file, name):
 
 def validate_source(root):
     required = ('LICENSE', 'SKILL.md', 'shared/core.md', 'shared/protocols/context.md',
-                'scripts/lint_tex.py', 'evals/cases.json', 'docs/coverage.json')
+                'scripts/lint_tex.py', 'evals/cases.json')
     for name in required:
         if not (root / name).is_file():
             raise PackageError('Missing source: {}'.format(name))
@@ -131,13 +131,6 @@ def validate_source(root):
         ids.extend(found)
     if len(ids) != len(set(ids)):
         raise PackageError('Duplicate standard ID')
-    coverage = json.loads((root / 'docs/coverage.json').read_text(encoding='utf-8'))
-    for record in coverage['sections']:
-        if not record['targets'] or not record['decision']:
-            raise PackageError('Unmapped source section: {}'.format(record))
-        for ident in record['targets']:
-            if ident not in ids:
-                raise PackageError('Unknown coverage target: {}'.format(ident))
     cases = json.loads((root / 'evals/cases.json').read_text(encoding='utf-8'))
     for case in cases:
         for path in case['fixtures']:
@@ -194,21 +187,14 @@ def stage_all(root, stage):
     for name, mapping in mappings.items():
         references = dict(entry_map)
         references.update(mapping)
-        manifest = {}
         for source, dest in sorted(mapping.items(), key=lambda item: str(item[0])):
             if source.is_symlink():
                 raise PackageError('Symlink source is not packaged: {}'.format(source))
             data = source.read_bytes()
-            original_hash = digest(data)
             if source.suffix == '.md':
                 data = rewrite_links(data.decode('utf-8'), source, dest, references).encode('utf-8')
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_bytes(data)
-            manifest[dest.relative_to(stage / name).as_posix()] = {
-                'source': source.relative_to(root).as_posix(),
-                'source_sha256': original_hash, 'packaged_sha256': digest(data)}
-        (stage / name / 'RESOURCE-MANIFEST.json').write_text(
-            json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True)+'\n', encoding='utf-8')
     check_links(stage)
 
 

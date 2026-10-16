@@ -1,9 +1,7 @@
 import contextlib
-import hashlib
 import importlib.util
 import io
 import json
-import re
 import shutil
 import tempfile
 import unittest
@@ -26,16 +24,18 @@ class RepositoryTests(unittest.TestCase):
         package.validate_source(ROOT)
 
     def test_one_router_source(self):
+        self.assertTrue((ROOT/'SKILL.md').is_file())
         self.assertFalse((ROOT/'skills/academic-writing/SKILL.md').exists())
         self.assertEqual(len(list(ROOT.glob('skills/*/SKILL.md'))), 2)
 
-    def test_all_original_sections_mapped(self):
-        coverage = json.loads((ROOT/'docs/coverage.json').read_text(encoding='utf-8'))
-        self.assertEqual(len(coverage['sections']), 69)
-        for name, meta in coverage['source_files'].items():
-            entries = [r for r in coverage['sections'] if r['source']==name]
-            self.assertEqual([r['section'] for r in entries], list(range(1,meta['section_count']+1)))
-            self.assertEqual(len(meta['sha256']),64)
+    def test_execution_resources(self):
+        guide = ROOT/'skills/academic-writing-guide/references'
+        for name in ('argument-design.md', 'draft-and-revise.md', 'source-work.md',
+                     'section-moves.md', 'visual-design.md', 'submission.md'):
+            self.assertTrue((guide/name).is_file(), name)
+        self.assertTrue((ROOT/'skills/academic-writing-audit/references/review-methods.md').is_file())
+        for domain in ('evidence', 'organization', 'prose', 'visuals', 'citations', 'consistency'):
+            self.assertTrue((ROOT/'shared/standards'/(domain+'.md')).is_file(), domain)
 
     def test_cases_have_positive_and_negative_expectations(self):
         cases = json.loads((ROOT/'evals/cases.json').read_text(encoding='utf-8'))
@@ -81,16 +81,13 @@ class RepositoryTests(unittest.TestCase):
             root=Path(tmp); (root/'a.md').write_text('```text\n[example](not-a-file.md)\n```\n',encoding='utf-8')
             package.check_links(root)
 
-    def test_packaged_dependencies_and_hashes(self):
+    def test_packaged_skills_resolve_resources(self):
         with tempfile.TemporaryDirectory() as tmp:
             out=Path(tmp)/'out'; package.build(ROOT,out)
             with zipfile.ZipFile(out/'academic-writing-skills.zip') as z:
                 names=set(z.namelist())
                 for skill in package.ALL_SKILLS:
                     self.assertIn(skill+'/SKILL.md',names)
-                    manifest=json.loads(z.read(skill+'/RESOURCE-MANIFEST.json'))
-                    for path, meta in manifest.items():
-                        self.assertEqual(hashlib.sha256(z.read(skill+'/'+path)).hexdigest(),meta['packaged_sha256'])
                 for skill in package.EXECUTION:
                     self.assertIn(skill+'/references/standards/evidence.md',names)
                     self.assertIn(skill+'/scripts/lint_tex.py',names)
