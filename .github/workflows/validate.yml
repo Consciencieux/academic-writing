@@ -1,0 +1,44 @@
+name: Validate Skills
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: 校验并验证安装包结构
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/lint_tex.py scripts/package_skills.py
+          python3 scripts/package_skills.py --output-dir dist
+          python3 - <<'PY'
+          import zipfile
+          from pathlib import Path
+          guide = Path('dist/academic-writing-guide.zip')
+          audit = Path('dist/academic-writing-audit.zip')
+          bundle = Path('dist/academic-writing-skills.zip')
+          for file, skills in (
+              (guide, ('academic-writing-guide',)),
+              (audit, ('academic-writing-audit',)),
+              (bundle, ('academic-writing', 'academic-writing-guide', 'academic-writing-audit')),
+          ):
+              with zipfile.ZipFile(file) as archive:
+                  names = set(archive.namelist())
+                  for skill in skills:
+                      assert f'{skill}/SKILL.md' in names, (file, skill)
+                  if 'academic-writing-guide' in skills:
+                      assert 'academic-writing-guide/references/rules/language.md' in names
+                      assert 'academic-writing-guide/references/chapter-methods.md' in names
+                  if 'academic-writing-audit' in skills:
+                      assert 'academic-writing-audit/references/rules/self-check.md' in names
+                      assert 'academic-writing-audit/scripts/lint_tex.py' in names
+          print('安装包结构检查通过')
+          PY
