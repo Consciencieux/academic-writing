@@ -9,10 +9,10 @@
     ],
     "standards": [
       "EVID-02",
-      "EVID-12",
+      "EVID-07",
       "PROSE-07",
       "PROSE-09",
-      "PROSE-13"
+      "PROSE-08"
     ],
     "expected": [
       "中位数 A=100、B=90 ms，降低10%",
@@ -33,7 +33,7 @@
     ],
     "standards": [
       "EVID-01",
-      "EVID-09"
+      "EVID-06"
     ],
     "expected": [
       "得到2并给有效代数推导"
@@ -51,7 +51,7 @@
       "fixtures/valid-passages.md"
     ],
     "standards": [
-      "PROSE-02",
+      "PROSE-01",
       "PROSE-06",
       "ORG-05"
     ],
@@ -75,7 +75,6 @@
     "standards": [
       "ORG-01",
       "ORG-02",
-      "ORG-09",
       "ORG-03"
     ],
     "expected": [
@@ -142,11 +141,10 @@
       "fixtures/materials.md"
     ],
     "standards": [
-      "ORG-09",
-      "PROSE-08",
+      "ORG-02",
+      "PROSE-10",
       "EVID-02",
-      "CONS-02",
-      "CONS-05"
+      "CONS-02"
     ],
     "expected": [
       "识别第2/3章重复",
@@ -168,9 +166,9 @@
       "fixtures/valid-passages.md"
     ],
     "standards": [
-      "PROSE-08",
-      "PROSE-11",
-      "PROSE-12",
+      "PROSE-10",
+      "PROSE-04",
+      "PROSE-05",
       "PROSE-06",
       "CITE-03",
       "CONS-04"
@@ -193,8 +191,7 @@
       "fixtures/paper-with-issues.md"
     ],
     "standards": [
-      "ORG-09",
-      "CONS-05"
+      "ORG-02"
     ],
     "expected": [
       "实际读完后给结构诊断",
@@ -238,7 +235,7 @@
     "standards": [
       "CONS-02",
       "CONS-03",
-      "ORG-09"
+      "ORG-02"
     ],
     "expected": [
       "Audit只诊断，Guide实际修改",
@@ -260,7 +257,7 @@
       "fixtures/measurements.csv"
     ],
     "standards": [
-      "PROSE-08",
+      "PROSE-10",
       "EVID-01"
     ],
     "expected": [
@@ -280,8 +277,7 @@
       "fixtures/materials.md"
     ],
     "standards": [
-      "CONS-02",
-      "CONS-05"
+      "CONS-02"
     ],
     "expected": [
       "读取并维持文稿快照",
@@ -302,8 +298,8 @@
     ],
     "standards": [
       "CITE-06",
-      "ORG-10",
-      "ORG-15"
+      "PROSE-09",
+      "ORG-07"
     ],
     "expected": [
       "完成可做的通用整理",
@@ -323,9 +319,9 @@
       "fixtures/chinese-material.md"
     ],
     "standards": [
-      "PROSE-03",
-      "PROSE-11",
-      "PROSE-12",
+      "PROSE-02",
+      "PROSE-04",
+      "PROSE-05",
       "EVID-01"
     ],
     "expected": [
@@ -347,11 +343,11 @@
       "fixtures/chinese-material.md"
     ],
     "standards": [
-      "PROSE-03",
+      "PROSE-02",
       "PROSE-09",
-      "PROSE-11",
-      "PROSE-12",
-      "PROSE-13"
+      "PROSE-04",
+      "PROSE-05",
+      "PROSE-08"
     ],
     "expected": [
       "指出具体黑话、电报体、机械方面体、装饰加粗引号、括号挂载",
@@ -393,7 +389,7 @@
     "standards": [
       "VIS-01",
       "VIS-03",
-      "PROSE-12"
+      "PROSE-05"
     ],
     "expected": [
       "先判断表格必要性",
@@ -438,7 +434,7 @@
       "PROSE-07",
       "PROSE-09",
       "VIS-04",
-      "EVID-12"
+      "EVID-07"
     ],
     "expected": [
       "图注任务也加载完整语言标准",
@@ -459,8 +455,8 @@
       "fixtures/materials.md"
     ],
     "standards": [
-      "PROSE-03",
-      "PROSE-11",
+      "PROSE-02",
+      "PROSE-04",
       "CITE-01",
       "CITE-02"
     ],
@@ -513,9 +509,9 @@
       "fixtures/chinese-valid.md"
     ],
     "standards": [
-      "PROSE-08",
+      "PROSE-10",
       "PROSE-09",
-      "PROSE-11",
+      "PROSE-04",
       "PROSE-06"
     ],
     "expected": [
@@ -536,10 +532,9 @@
       "fixtures/chinese-material.md"
     ],
     "standards": [
-      "PROSE-03",
-      "PROSE-11",
-      "PROSE-12",
-      "CONS-05"
+      "PROSE-02",
+      "PROSE-04",
+      "PROSE-05"
     ],
     "expected": [
       "每轮保持中文共同规范",
@@ -567,12 +562,11 @@
       "fixtures/chinese-material.md"
     ],
     "standards": [
-      "PROSE-02",
-      "PROSE-04",
-      "PROSE-05",
+      "PROSE-01",
+      "PROSE-03",
       "PROSE-06",
-      "PROSE-13",
-      "PROSE-14"
+      "PROSE-08",
+      "PROSE-10"
     ],
     "expected": [
       "还原主要条件与谓语",
@@ -602,6 +596,153 @@
     "avoid": [
       "把纯列宽任务扩成文献核查或全文改写",
       "捏造已渲染状态"
+    ]
+  },
+  {
+    "id": "D01",
+    "role": "guide",
+    "task": "根据比较实验材料，写一个中文结果段落。",
+    "fixtures": [
+      "fixtures/direct-results.md"
+    ],
+    "standards": [
+      "EVID-02",
+      "EVID-07",
+      "PROSE-06"
+    ],
+    "expected": [
+      "明确陈述在测试负载下中位耗时从100 ms降到88 ms，下降12%",
+      "保留三次计时与实际配置的身份，语言连贯",
+      "以现有证据完成结果段落"
+    ],
+    "avoid": [
+      "普遍化为所有负载",
+      "在明确范围之后再否定原文未提出的普遍适用性",
+      "编造显著性或机制解释",
+      "把工具/规范检查状态写进结果"
+    ]
+  },
+  {
+    "id": "D02",
+    "role": "guide",
+    "task": "根据指标材料写测量方法，并说明这些记录能否回答端到端延迟问题。",
+    "fixtures": [
+      "fixtures/measurement-boundary.md"
+    ],
+    "standards": [
+      "EVID-02",
+      "EVID-03",
+      "EVID-05",
+      "PROSE-06"
+    ],
+    "expected": [
+      "准确说明处理时间从入队到计算完成，排除网络传输",
+      "明确现有记录缺少端到端延迟需要的网络项",
+      "保留影响研究问题的限制"
+    ],
+    "avoid": [
+      "为了删否定而抹去测量边界",
+      "把处理时间当成端到端延迟",
+      "扩写成对所有研究有效性的免责声明"
+    ]
+  },
+  {
+    "id": "D03",
+    "role": "guide",
+    "task": "依据失败测试材料，写一段结果与解释。",
+    "fixtures": [
+      "fixtures/negative-result.md"
+    ],
+    "standards": [
+      "EVID-01",
+      "EVID-02",
+      "PROSE-06"
+    ],
+    "expected": [
+      "保留10次测试均未达到100 ms目标、最大值138 ms的结果",
+      "准确区分目标与观测",
+      "直接报告负结果"
+    ],
+    "avoid": [
+      "把未达到目标改成模糊的提升空间以隐藏失败",
+      "补造失败原因",
+      "加入对无关任务或模型身份的免责声明"
+    ]
+  },
+  {
+    "id": "D04",
+    "role": "guide",
+    "task": "整理工具说明，使维护者能直接使用，保留所有命令行为和返回码。",
+    "fixtures": [
+      "fixtures/tool-copy.md"
+    ],
+    "standards": [
+      "PROSE-01",
+      "PROSE-06",
+      "PROSE-10"
+    ],
+    "expected": [
+      "保留lint命令、参数含义和0/1/2返回码",
+      "用覆盖内容及后续动作组织说明",
+      "合并重复的工具能力边界"
+    ],
+    "avoid": [
+      "只把不是改写成并非继续复述",
+      "删除输入错误的处置",
+      "增加一个防御式写作元规则"
+    ]
+  },
+  {
+    "id": "D05",
+    "role": "guide",
+    "task": "依次写出方法、结果和讨论，使用同一组比较实验材料。",
+    "fixtures": [
+      "fixtures/direct-results.md"
+    ],
+    "standards": [
+      "ORG-01",
+      "ORG-02",
+      "PROSE-06",
+      "EVID-02"
+    ],
+    "turns": [
+      "先写方法部分。",
+      "接着写结果部分。",
+      "最后写讨论部分。"
+    ],
+    "expected": [
+      "方法交代设置，结果交代观察，讨论解释实际发现",
+      "证据范围随主张呈现，后续使用已有明确条件",
+      "后两节保持同样的中文成文质量"
+    ],
+    "avoid": [
+      "每节末尾重复不意味着所有负载都有效",
+      "把限制罗列作为讨论的主体",
+      "为填讨论而编造机制或新结果"
+    ]
+  },
+  {
+    "id": "D06",
+    "role": "audit",
+    "task": "只审查这些段落的限制与否定是否有实际作用。",
+    "fixtures": [
+      "fixtures/negation-review.md"
+    ],
+    "standards": [
+      "PROSE-06",
+      "EVID-03",
+      "EVID-06"
+    ],
+    "expected": [
+      "第一段的重复普遍性否定应删除",
+      "第二段的网络排除项保留",
+      "第三段的缺失与0区分保留",
+      "第四段的因果纠正与原文错误主张直接相关，应保留"
+    ],
+    "avoid": [
+      "按否定词数量判错",
+      "把所有不等于或不能都当免责声明",
+      "继续讨论假想的无关误解"
     ]
   }
 ]

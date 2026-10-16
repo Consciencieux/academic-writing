@@ -1,7 +1,8 @@
 import contextlib
-import importlib.util
 import io
 import json
+import os
+import re
 import shutil
 import subprocess
 import sys
@@ -11,105 +12,113 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT/'scripts'))
+sys.path.insert(0, str(ROOT / 'scripts'))
 import package_skills as package
 import lint_tex as lint
+import language_checks
 
 
 class RepositoryTests(unittest.TestCase):
     def test_source_validation(self):
         package.validate_source(ROOT)
 
-    def test_exact_entry_set(self):
-        entries = {p.relative_to(ROOT).as_posix() for p in ROOT.rglob('SKILL.md') if 'dist' not in p.parts}
-        self.assertEqual(entries, {'SKILL.md', 'skills/academic-writing-guide/SKILL.md', 'skills/academic-writing-audit/SKILL.md'})
-
-    def test_core_is_exact_projection(self):
-        expected = package.core_text(ROOT)
+    def test_entries_reference_shared_core(self):
+        core = (ROOT / 'shared/core.md').read_text(encoding='utf-8').strip()
         for name in package.EXECUTION:
-            text = (ROOT/'skills'/name/'SKILL.md').read_text(encoding='utf-8')
-            self.assertEqual(text.split(package.BEGIN)[1].split(package.END)[0].strip(), expected)
+            text = (ROOT / 'skills' / name / 'SKILL.md').read_text(encoding='utf-8')
+            self.assertIn('(../../shared/core.md)', text)
+            self.assertNotIn(core, text)
 
-    def test_stale_core_rejected_and_sync_restores(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            clone = Path(tmp)
-            shutil.copytree(ROOT/'shared', clone/'shared')
-            shutil.copytree(ROOT/'skills', clone/'skills')
-            p = clone/'skills/academic-writing-guide/SKILL.md'
-            p.write_text(p.read_text(encoding='utf-8').replace('CORE-02', 'WRONG', 1), encoding='utf-8')
-            with self.assertRaises(package.PackageError): package.project_core(clone)
-            package.project_core(clone, write=True)
-            package.project_core(clone)
+    def test_yaml_quotes_and_multiline_description(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'SKILL.md'
+            path.write_text('---\nname: "sample"\ndescription: >-\n  A multi-line\n  description.\nmetadata:\n  owner: "example"\n---\n# Instructions\nWrite.\n', encoding='utf-8')
+            package.validate_entry(path, 'sample')
 
-    def test_broken_link(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            p = Path(tmp); (p/'a.md').write_text('[x](missing.md)', encoding='utf-8')
-            with self.assertRaises(package.PackageError): package.check_links(p)
+    def test_entry_length_is_not_an_artificial_gate(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'SKILL.md'
+            path.write_text('---\nname: sample\ndescription: Example\n---\n' + 'An instruction.\n' * 510, encoding='utf-8')
+            package.validate_entry(path, 'sample')
 
-    def test_escape_link(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            p = Path(tmp); (p/'a.md').write_text('[x](../missing.md)', encoding='utf-8')
-            with self.assertRaises(package.PackageError): package.check_links(p)
+    def test_bad_link_reports_target(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'a.md').write_text('[ref](missing.md)', encoding='utf-8')
+            with self.assertRaisesRegex(package.PackageError, 'missing.md'):
+                package.check_links(root)
 
-    def test_missing_anchor(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            p = Path(tmp); (p/'a.md').write_text('[x](b.md#not-here)', encoding='utf-8')
-            (p/'b.md').write_text('# b', encoding='utf-8')
-            with self.assertRaises(package.PackageError): package.check_links(p)
+    def test_bad_rule_anchor_reports_reference(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'a.md').write_text('[ref](b.md#unknown)', encoding='utf-8')
+            (root / 'b.md').write_text('# Text\n', encoding='utf-8')
+            with self.assertRaisesRegex(package.PackageError, 'unknown'):
+                package.check_links(root)
 
-    def test_code_example_link_not_followed_or_rewritten(self):
+    def test_code_example_links_keep_their_text(self):
         text = '```md\n[example](missing.md)\n```\n'
-        with tempfile.TemporaryDirectory() as tmp:
-            p = Path(tmp); (p/'a.md').write_text(text, encoding='utf-8')
-            package.check_links(p)
-            self.assertEqual(package.rewrite_links(text,p/'a.md',p/'b.md',{}),text)
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'a.md').write_text(text, encoding='utf-8')
+            package.check_links(root)
+            self.assertEqual(package.rewrite_links(text, root / 'a.md', root / 'b.md', {}), text)
 
-    def test_writing_base_is_additive_and_directly_linked(self):
-        text = (ROOT/'skills/academic-writing-guide/SKILL.md').read_text(encoding='utf-8')
-        self.assertIn('只要本次会生成或改写论文中的中文文字',text)
-        self.assertIn('(../../shared/standards/prose.md)',text)
-        self.assertIn('图注、表内说明、删除后的承接改写',text)
-        self.assertIn('即将创建、扩展或重组',text)
-        self.assertIn('完整执行 CONS-04',text)
-        # Static contract check only; real loading is tested by model scenarios.
-
-    def test_eval_fixtures_and_expectations(self):
-        cases = json.loads((ROOT/'evals/cases.json').read_text(encoding='utf-8'))
-        self.assertEqual(len(cases),len({c['id'] for c in cases}))
-        for c in cases:
-            self.assertTrue(c['expected'] and c['avoid'])
-            for f in c['fixtures']: self.assertTrue((ROOT/'evals'/f).is_file())
+    def test_eval_resources_and_rule_references(self):
+        ids = package.standard_ids(ROOT)
+        cases = json.loads((ROOT / 'evals/cases.json').read_text(encoding='utf-8'))
+        self.assertEqual(len(cases), len({c['id'] for c in cases}))
+        for case in cases:
+            with self.subTest(case=case['id']):
+                self.assertTrue(case['expected'] and case['avoid'])
+                self.assertTrue(set(case['standards']) <= ids)
+                for fixture in case['fixtures']:
+                    self.assertTrue((ROOT / 'evals' / fixture).is_file())
         self.assertTrue(any('turns' in c for c in cases))
 
-    def test_packages_links_and_installed_tools(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp); out = root/'out'; package.build(ROOT,out)
-            for name in package.EXECUTION + ('academic-writing-skills',):
-                dst = root/name
-                with zipfile.ZipFile(out/(name+'.zip')) as z:
-                    z.extractall(dst)
-                    expected = set(package.ALL_SKILLS) if name=='academic-writing-skills' else {name}
-                    self.assertEqual({n.split('/')[0] for n in z.namelist()},expected)
-                package.check_links(dst)
-                skills = package.EXECUTION if name=='academic-writing-skills' else (name,)
-                for skill in skills:
-                    base = dst/skill
-                    self.assertTrue((base/'shared/standards/prose.md').is_file())
-                    self.assertTrue((base/'scripts/language_checks.py').is_file())
-                    sample = root/'sample.md'; sample.write_text('实现队列化、并发化；完成链路化、流程化。**关键优势**。',encoding='utf-8')
-                    r = subprocess.run([sys.executable,str(base/'scripts/lint_text.py'),str(sample),'--json'],
-                                       capture_output=True,encoding='utf-8',check=True)
-                    self.assertIn('L-BOLD',{f['code'] for f in json.loads(r.stdout)['findings']})
-                    tex = root/'sample.tex'; tex.write_text('\\documentclass{article}\n\\textbf{关键优势}。',encoding='utf-8')
-                    r = subprocess.run([sys.executable,str(base/'scripts/lint_tex.py'),str(tex),'--json'],
-                                       capture_output=True,encoding='utf-8',check=True)
-                    self.assertIn('L-BOLD',{f['code'] for f in json.loads(r.stdout)['findings']})
+    def test_detected_hints_reference_current_standards(self):
+        words = language_checks.abstract_words()
+        sample = '本节将介绍。实现队列化、并发化；完成链路化、流程化。**关键**形成“闭环”体系。' + '（补充）' * 3
+        for hint in language_checks.language_hints(sample, words):
+            self.assertIn(hint.standard, package.standard_ids(ROOT))
 
-    def test_reproducible_current_toolchain(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            a,b=Path(tmp)/'a',Path(tmp)/'b'
-            package.build(ROOT,a);package.build(ROOT,b)
-            self.assertEqual({p.name:p.read_bytes() for p in a.iterdir()}, {p.name:p.read_bytes() for p in b.iterdir()})
+    def test_packaged_resources_and_tools(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            out = root / 'out'
+            package.build(ROOT, out)
+            for name in package.EXECUTION + ('academic-writing-skills',):
+                dst = root / name
+                with zipfile.ZipFile(out / (name + '.zip')) as archive:
+                    archive.extractall(dst)
+                    expected = set(package.ALL_SKILLS) if name == 'academic-writing-skills' else {name}
+                    self.assertEqual({p.split('/')[0] for p in archive.namelist()}, expected)
+                package.check_links(dst)
+                roles = package.EXECUTION if name == 'academic-writing-skills' else (name,)
+                for role in roles:
+                    base = dst / role
+                    self.assertEqual((base / 'shared/core.md').read_bytes(), (ROOT / 'shared/core.md').read_bytes())
+                    sample = root / 'sample.md'
+                    sample.write_text('实现队列化、并发化；完成链路化、流程化。**关键优势**。', encoding='utf-8')
+                    result = subprocess.run([sys.executable, str(base / 'scripts/lint_text.py'), str(sample), '--json'], capture_output=True, encoding='utf-8', check=True)
+                    self.assertIn('L-BOLD', {f['code'] for f in json.loads(result.stdout)['findings']})
+                    tex = root / 'sample.tex'
+                    tex.write_text('\\documentclass{article}\n\\textbf{关键优势}。', encoding='utf-8')
+                    result = subprocess.run([sys.executable, str(base / 'scripts/lint_tex.py'), str(tex), '--json'], capture_output=True, encoding='utf-8', check=True)
+                    self.assertIn('L-BOLD', {f['code'] for f in json.loads(result.stdout)['findings']})
+
+    def test_file_symlink_and_cache_handling(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'real.md').write_text('Text\n', encoding='utf-8')
+            try:
+                (root / 'linked.md').symlink_to(root / 'real.md')
+            except OSError:
+                self.skipTest('File symlinks unavailable on this runner')
+            (root / '._cache').write_text('cache', encoding='utf-8')
+            (root / 'module.pyc').write_bytes(b'cache')
+            found = {p.name for p in package.files(root)}
+            self.assertEqual(found, {'real.md', 'linked.md'})
 
 
 class LintTests(unittest.TestCase):

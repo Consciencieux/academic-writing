@@ -19,7 +19,7 @@ class LanguageTests(unittest.TestCase):
         self.assertIn('赋能',self.words);self.assertIn('闭环',self.words);self.assertIn('增强',self.words)
     def test_word_list_changes_follow_source(self):
         with tempfile.TemporaryDirectory() as t:
-            p=Path(t)/'prose.md';p.write_text('## PROSE-11 用词\n> 词一、词二\n## PROSE-12 其他\n',encoding='utf-8')
+            p=Path(t)/'prose.md';p.write_text('## PROSE-04 用词\n> 词一、词二\n## PROSE-05 其他\n',encoding='utf-8')
             self.assertEqual(checks.abstract_words(p),('词一','词二'))
     def test_missing_word_resource_fails(self):
         with tempfile.TemporaryDirectory() as t:
@@ -81,7 +81,7 @@ class MarkdownTests(unittest.TestCase):
     def test_json_contains_traceable_rules(self):
         p=self.write('赋能闭环。');o=io.StringIO()
         with contextlib.redirect_stdout(o):lint_text.main([str(p),'--json'])
-        record=json.loads(o.getvalue());self.assertEqual(record['findings'][0]['standard'],'PROSE-11')
+        record=json.loads(o.getvalue());self.assertEqual(record['findings'][0]['standard'],'PROSE-04')
     def test_bad_threshold(self):
         p=self.write('文字')
         with contextlib.redirect_stderr(io.StringIO()):self.assertEqual(lint_text.main([str(p),'--max-cell','0']),2)

@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""Chinese prose candidates for Markdown/plain text. Read-only, stdlib.
-
-Skips code fences, quoted examples, headings and Markdown table headers.
-Does not decide table semantics or naturalness; inspect the reported context.
-Exit 0: below --fail-on; 1: threshold reached; 2: input/resource failure.
-"""
+"""Locate Chinese prose and table review candidates in Markdown and plain text."""
 from __future__ import annotations
 import argparse
 import json
@@ -111,7 +106,7 @@ def analyze(paths: list[str], max_comma: int = 6, max_cell: int = 120) -> dict:
                 add(p, start, h, text)
             subject = repeated_subject(text)
             if subject:
-                add(p, start, ('L-SUBJECT', 'PROSE-14', f'连续以“{subject}”开头，检查是否机械重复'), text)
+                add(p, start, ('L-SUBJECT', 'PROSE-03', f'连续以“{subject}”开头，检查是否机械重复'), text)
             paragraph = []
         i = 0
         while i < len(lines):
@@ -130,7 +125,7 @@ def analyze(paths: list[str], max_comma: int = 6, max_cell: int = 120) -> dict:
                     for h in table_cell_hints(cells, max_cell): add(p, i+1, h, text)
                     for h in language_hints(' '.join(cells), words, table=True, max_comma=max_comma): add(p, i+1, h, text)
                     if table_rows == 21:
-                        add(p, i+1, ('T-LONG', 'VIS-03', '表格记录较多，检查分组、分页与必要性；不是长度违规'), text)
+                        add(p, i+1, ('T-LONG', 'VIS-03', '表格记录较多，检查分组、分页与检索效果'), text)
                     i += 1; continue
                 table_columns = None
             if not text.strip():
@@ -146,7 +141,7 @@ def analyze(paths: list[str], max_comma: int = 6, max_cell: int = 120) -> dict:
                 if re.match(r'^#{1,6}\s', text):
                     following = next((j for j in range(i+1, len(lines)) if lines[j].strip()), None)
                     if following is not None and re.match(r'\s*本[章节部分]', lines[following]):
-                        add(p, following+1, ('L-TITLE-ECHO', 'PROSE-10', '标题后播报本章/本节，检查是否仅复述标题'), lines[following])
+                        add(p, following+1, ('L-TITLE-ECHO', 'ORG-04', '标题后播报本章/本节，检查是否仅复述标题'), lines[following])
     unique = {(f['path'], f['line'], f['code']): f for f in findings}
     return {'scope': 'static-candidates', 'files': [str(f) for f in files],
             'findings': sorted(unique.values(), key=lambda f: (f['path'], f['line'], f['code']))}
@@ -155,8 +150,8 @@ def analyze(paths: list[str], max_comma: int = 6, max_cell: int = 120) -> dict:
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('paths', nargs='+')
-    p.add_argument('--max-comma', type=int, default=6)
-    p.add_argument('--max-cell', type=int, default=120, help='Review hint only, not a maximum permitted cell length')
+    p.add_argument('--max-comma', type=int, default=6, help='comma-count hint threshold (default: 6)')
+    p.add_argument('--max-cell', type=int, default=120, help='cell-length hint threshold (default: 120 characters)')
     p.add_argument('--severity', choices=('info','warn','error'), default='info')
     p.add_argument('--fail-on', choices=('never','info','warn','error'), default='error')
     p.add_argument('--json', action='store_true')
@@ -172,7 +167,7 @@ def main(argv: list[str] | None = None) -> int:
     else:
         for f in result['findings']:
             print('[{severity}] {path}:{line} {code} ({standard}) {message}'.format(**f))
-        print(f"静态候选 {len(result['findings'])} 项；逐项结合语义判断。")
+        print(f"静态候选 {len(result['findings'])} 项。")
     return int(any(LEVELS[f['severity']] >= LEVELS[a.fail_on] for f in all_findings))
 
 

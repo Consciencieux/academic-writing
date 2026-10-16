@@ -1,13 +1,5 @@
 #!/usr/bin/env python3
-"""Static LaTeX candidates, not a compiler or a semantic judge (Python 3.11+, stdlib).
-
-Static roots are inspected independently; comments and common code environments
-are masked. Dynamic TeX, external labels and complex bibliography expressions
-require the project's compiler and actual source inspection.
-
-Exit: 0 = below --fail-on; 1 = a displayed finding reaches --fail-on;
-2 = invalid/unreadable input. Default --fail-on=error never fails on style hints.
-"""
+"""Locate Chinese prose, table and reference review candidates in LaTeX sources."""
 import argparse
 import json
 import os
@@ -132,7 +124,7 @@ def scan_language(path, lines, words, add, max_comma):
         if not in_table:
             subject = repeated_subject(text)
             if subject:
-                add(path, number, 'info', 'L-SUBJECT', 'PROSE-14',
+                add(path, number, 'info', 'L-SUBJECT', 'PROSE-03',
                     '连续以“{}”开头，检查是否机械重复'.format(subject), text)
 
     def flush():
@@ -172,7 +164,7 @@ def scan_language(path, lines, words, add, max_comma):
                     rows += 1
                     if rows == 21:
                         add(path, row_start, 'info', 'T-LONG', 'VIS-03',
-                            '表格记录较多，检查分组、跨页与必要性；不是长度违规')
+                            '表格记录较多，检查分组、跨页与检索效果')
                 table_header, row = False, []
             continue
         if re.match(r'\s*\\(?:chapter|section|subsection|subsubsection)\b', line):
@@ -183,7 +175,7 @@ def scan_language(path, lines, words, add, max_comma):
             flush(); continue
         if title_pending:
             if re.match(r'\s*本(?:章|节|部分)', line):
-                add(path, number, 'info', 'L-TITLE-ECHO', 'PROSE-10', '标题后组织播报，检查是否复述标题', line)
+                add(path, number, 'info', 'L-TITLE-ECHO', 'ORG-04', '标题后组织播报，检查是否复述标题', line)
             title_pending = False
         if not paragraph:
             start = number
@@ -213,12 +205,12 @@ def analyze(paths, all_files=False, max_comma=6):
                              standard=standard, message=message, excerpt=excerpt[:140]))
 
     for path, number, target in unresolved:
-        add(path, number, 'warn', 'S-INPUT', 'CONS-05',
+        add(path, number, 'warn', 'S-INPUT', 'tooling/latex.md',
             '静态扫描未解析引入 {}；需由实际构建确认'.format(target))
     active = set(p for _, members in units for p in members)
     for path in sorted(set(tex)-active):
-        add(path, 0, 'info', 'S-OUTSIDE', 'CONS-04',
-            '不在所识别根文件的静态集合内；可能是独立片段，不据此删除')
+        add(path, 0, 'info', 'S-OUTSIDE', 'tooling/latex.md',
+            '此文件处于已识别根文件的静态集合之外，核对其用途')
     words = abstract_words()
     for path in sorted(active):
         scan_language(path, cache[path], words, add, max_comma)
@@ -247,11 +239,11 @@ def analyze(paths, all_files=False, max_comma=6):
         for key, sites in labels.items():
             if len(sites) > 1:
                 add(sites[1][0], sites[1][1], 'warn', 'S-DUP-LABEL', 'VIS-06',
-                    '同一静态根范围存在重复标签候选 {}；条件编译需另核实'.format(key))
+                    '同一静态根范围存在重复标签候选 {}，结合构建配置核对'.format(key))
         for path, number, key in refs:
             if key not in labels:
                 add(path, number, 'warn', 'S-REF', 'VIS-06',
-                    '静态集合未找到标签 {}；外部/动态标签需编译核实'.format(key))
+                    '静态集合未找到标签 {}，结合外部标签及编译结果核对'.format(key))
         keys = set()
         for file in bibliography:
             keys.update(BIB_KEY.findall(file.read_text(encoding='utf-8')))
@@ -267,7 +259,7 @@ def analyze(paths, all_files=False, max_comma=6):
                 for macro, value in values:
                     if value in line:
                         add(path, number, 'info', 'S-SSOT', 'CONS-01',
-                            '发现与宏 \\{} 相同的字面值；只有确认同一事实才考虑复用'.format(macro), line)
+                            '发现与宏 \\{} 相同的字面值；核对是否引用同一事实'.format(macro), line)
     return {'scope': 'static-candidates',
             'units': [{'root': str(root) if root else None, 'files': [str(p) for p in members]}
                       for root, members in units],
@@ -278,7 +270,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('paths', nargs='+')
     parser.add_argument('--all-files', action='store_true')
-    parser.add_argument('--max-comma', type=int, default=6, help='candidate threshold, not a correctness boundary')
+    parser.add_argument('--max-comma', type=int, default=6, help='comma-count hint threshold (default: 6)')
     parser.add_argument('--severity', choices=('info', 'warn', 'error'), default='info')
     parser.add_argument('--fail-on', choices=('never', 'info', 'warn', 'error'), default='error')
     parser.add_argument('--json', action='store_true')
@@ -297,7 +289,7 @@ def main(argv=None):
     else:
         for item in shown:
             print('[{severity}] {path}:{line} {code} ({standard}) {message}'.format(**item))
-        print('静态候选 {} 项；语义、证据与真实编译结果需另行确认。'.format(len(shown)))
+        print('静态候选 {} 项。'.format(len(shown)))
     return int(any(LEVELS[f['severity']] >= LEVELS[args.fail_on] for f in all_findings))
 
 
