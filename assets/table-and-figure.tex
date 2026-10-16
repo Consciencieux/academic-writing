@@ -1,30 +1,20 @@
-% 三线表骨架（booktabs + tabularx）
-%
-% 写之前确认两件事：
-%   列的语义——每一列的单元格是不是同一种信息？
-%   行的语义——每一行是不是在描述同一个对象？
-% 只回答一个问题的小表通常用正文更清楚；完整论证不要塞进单元格。
-
+% 展示结构的片段；使用前由真实研究内容替换栏目与数值。
 \begin{table}[htbp]
 \centering
-\small
-\caption{这张表回答什么问题}
-\label{tab:example}
-% V 列权重之和 = 本表 V 列的列数（此处 0.8 + 1.2 = 2）
-\begin{tabularx}{\textwidth}{L{2.4cm}V{0.8}V{1.2}}
+\caption{比较对象与评价口径}
+\label{tab:comparison}
+\begin{tabularx}{\linewidth}{lYY}
 \toprule
-\textbf{对象} & \textbf{字段一} & \textbf{字段二}\\
+对象 & 指标及单位 & 数据范围/条件 \\
 \midrule
-第一个对象 & 取值 & 取值\\
-第二个对象 & 取值 & 取值\\
+对象 A & 待填真实值 & 待填实际条件 \\
 \bottomrule
 \end{tabularx}
 \end{table}
-
-% 图注回答「这是什么」，正文回答「它说明什么」；图、表、正文不重复播报同一过程。
+% 图件由项目绘图工具从真实数据生成，以下仅示范引入方式。
 % \begin{figure}[htbp]
 % \centering
-% \includegraphics[width=0.8\textwidth]{figure.pdf}
-% \caption{图是什么；实现状态与适用范围}
-% \label{fig:example}
+% \includegraphics[width=.8\linewidth]{figures/result.pdf}
+% \caption{对象、分面、单位及必要条件；误差与样本量据实说明。}
+% \label{fig:result}
 % \end{figure}

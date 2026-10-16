@@ -1,103 +1,42 @@
 name: Release
-
-# 推送 v* 标签时，把 skill 打成安装载荷并附到 GitHub Release。
-# 载荷 = SKILL.md + references/ + scripts/ + assets/ + LICENSE；
-# README.md、AGENTS.md、.github/、.gitignore 属于仓库设施，不进载荷。
-
 on:
   push:
-    tags:
-      - "v*"
-
+    tags: ['v*']
 permissions:
   contents: write
-
 jobs:
   release:
     runs-on: ubuntu-latest
-    env:
-      # 从仓库名取，不写死：改仓库名时工作流无需同步修改
-      SKILL_NAME: ${{ github.event.repository.name }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
-      - name: 校验
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import pathlib, re, sys
-          name = pathlib.Path(".").resolve().name
-          text = pathlib.Path("SKILL.md").read_text(encoding="utf-8")
-          fm = re.match(r"---\n(.*?)\n---\n", text, re.S)
-          if not fm:
-              sys.exit("SKILL.md 缺少 frontmatter")
-          m = re.search(r"^name:\s*(\S+)\s*$", fm.group(1), re.M)
-          if not m or m.group(1) != name:
-              sys.exit(f"frontmatter name 与目录名不一致: {m.group(1) if m else None} != {name}")
-          for key in ("description",):
-              if not re.search(rf"^{key}:\s*\S", fm.group(1), re.M):
-                  sys.exit(f"frontmatter 缺少 {key}")
-          for path in ("references", "scripts", "assets", "LICENSE"):
-              if not pathlib.Path(path).exists():
-                  sys.exit(f"缺少 {path}")
-          for ref in re.findall(r"`((?:references|scripts|assets)/[^`]+)`", text):
-              if not pathlib.Path(ref).exists():
-                  sys.exit(f"SKILL.md 引用了不存在的文件: {ref}")
-          print(f"校验通过（name={name}）")
-          PY
-
-          # 标签必须对应 changelog 里的版本条目
-          VERSION="${GITHUB_REF_NAME#v}"
-          if ! grep -qF "## [${VERSION}]" CHANGELOG.md; then
-            echo "ERROR: CHANGELOG.md 中没有版本 ${VERSION}" >&2
-            echo "发版前先把 Unreleased 改为 ## [${VERSION}] - YYYY-MM-DD，再打标签。" >&2
-            exit 1
-          fi
-          echo "changelog 条目匹配：${VERSION}"
-
-      - name: 打包载荷
-        run: |
-          set -euo pipefail
-          STAGE="$(mktemp -d)/${SKILL_NAME}"
-          mkdir -p "$STAGE"
-          cp SKILL.md LICENSE "$STAGE/"
-          cp -R references scripts assets "$STAGE/"
-
-          # 去掉缓存与平台元数据，避免打进载荷（__pycache__ 是本仓库脚本运行时产生的）
-          find "$STAGE" \( -name '__pycache__' -o -name '.DS_Store' -o -name '._*' \) -prune -exec rm -rf {} + 2>/dev/null || true
-          find "$STAGE" -name '*.pyc' -delete 2>/dev/null || true
-
-          mkdir -p dist
-          OUT="dist/${SKILL_NAME}-skill.tar.gz"
-          tar -czf "$OUT" -C "$(dirname "$STAGE")" "${SKILL_NAME}"
-
-          # 失败关闭：上面的清理是尽力而为，这条校验才是保证
-          JUNK="$(tar -tzf "$OUT" | grep -E '(^|/)(__pycache__|\._|\.DS_Store)|\.pyc$' || true)"
-          if [ -n "$JUNK" ]; then
-            echo "ERROR: 载荷包含缓存或平台元数据文件：" >&2
-            echo "$JUNK" >&2
-            exit 1
-          fi
-
-          echo "载荷内容："
-          tar -tzf "$OUT" | sort
-
-      - name: 发布 Release
+      - name: Build dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Match release to changelog
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python - <<'PYCODE'
+          import os, pathlib, re
+          tag = os.environ['RELEASE_TAG']
+          if not re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?', tag):
+              raise SystemExit('Expected vMAJOR.MINOR.PATCH[-prerelease]')
+          marker = '## [' + tag[1:] + '] - '
+          if not any(line.startswith(marker) for line in pathlib.Path('CHANGELOG.md').read_text(encoding='utf-8').splitlines()):
+              raise SystemExit('Missing matching dated changelog entry')
+          PYCODE
+      - name: Regression tests
+        run: python -m unittest discover -s tests -v
+      - name: Build verified packages
+        run: python scripts/package_skills.py --output-dir dist
+      - name: Publish exact artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
         run: |
           set -euo pipefail
-          TAG="${GITHUB_REF_NAME}"
-          ASSET="dist/${SKILL_NAME}-skill.tar.gz"
-          SHA="$(sha256sum "$ASSET" | awk '{print $1}')"
-          {
-            echo "### Skill 载荷"
-            echo
-            echo "- 资产：\`${SKILL_NAME}-skill.tar.gz\`"
-            echo "- SHA-256：\`${SHA}\`"
-          } >> "$GITHUB_STEP_SUMMARY"
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" "$ASSET" --clobber
+          ASSETS=(dist/academic-writing-guide.zip dist/academic-writing-audit.zip dist/academic-writing-skills.zip dist/SHA256SUMS)
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" "${ASSETS[@]}" --clobber
           else
-            gh release create "$TAG" "$ASSET" --title "$TAG" --generate-notes
+            gh release create "$RELEASE_TAG" "${ASSETS[@]}" --title "$RELEASE_TAG" --generate-notes
           fi

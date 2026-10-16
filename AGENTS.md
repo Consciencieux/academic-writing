@@ -1,31 +1,11 @@
-# AGENTS.md
+# 仓库维护
 
-本仓库是多 Skill 体系。规则只存在于 `shared/rules/`（SSOT），各 Skill 只写工作流并用指针引用。
+本仓库维护中文学术写作的方法、标准和工具。
 
-## 能力盘点归属（2026-10）
+Guide 负责写作和修订，Audit 负责诊断。标准保留实践中的具体用词、错误表现、判定测试和例外；方法说明从材料到成品的操作。共同成文目标在 shared/core.md 维护，入口引用它。
 
-| 类别 | 主要来源 | 说明 |
-| --- | --- | --- |
-| 共享规范 | content-and-judgment.md、language.md、structure-and-formatting.md、ssot-and-concept-cleanup.md、红线表 | audit 与 guide 共同引用 |
-| 审查行为 | self-check.md 主体、lint 的语言/内容检查 | 形成 academic-writing-audit 工作流 |
-| 写作行为 | 原根 SKILL.md 中的起草/改写/扩写/压缩/润色 | 为 guide 提供边界；正面方法需新写 |
-| 文档工具 | latex-mechanics.md、lint 的标签/引用/编译相关、assets/ | audit 按需调用，不强制拆分 |
+修改时先确定要改善的写作行为，再调整相关文件。文件可以合并、重组或删除。正文加载由执行入口定义，恢复事件由 context.md 定义，工具结果处理由 documents.md 定义；其余位置链接到负责文件。
 
-## 结构
+示例使用“示例”或“教学材料”等短标签标明用途。真实研究材料保留出处；实际测试结果放入评估记录。
 
-- 根 `SKILL.md`：薄入口，只负责路由，不含具体规则或审查流程。
-- `skills/<name>/SKILL.md`：可独立发现的 Skill 入口。
-  - `academic-writing-audit`：规则审查（扫描已有文稿）
-  - `academic-writing-guide`：正面写作指导（待建）
-- `shared/rules/`：规则权威源。禁止在 Skill 内复制条文。
-- `scripts/`：机械检查与构建脚本。
-- `assets/`：模板。
-
-## 规则
-
-1. 同一主题只在 `shared/rules/` 写一次；Skill 内只用指针（`见 shared/rules/xxx.md §n`）。
-2. 现有规则尽量保留原文，不为架构机械重写。
-3. 增删 Skill 后更新本文件与 README。
-4. 保持通用，不写具体项目数据。
-
-改完后检查指针有效、无复制条文、构建通过。
+实现优先复用现有工具和库。规则或工具变化后，更新对应测试及行为用例，运行 unittest、源码校验和安装包构建。
