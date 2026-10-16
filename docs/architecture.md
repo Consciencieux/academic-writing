@@ -18,8 +18,7 @@ scripts/lint_tex.py 与 scripts/lint_text.py 共用 language_checks.py。抽象�
 
 构建器将共享标准、方法和工具复制进独立 Skill，改写并检查相对链接。安装包按文件职责保留目录；维护文档与评估材料留在源码仓库。
 
-## 维护
+## 依据
 
-标准内容与具体判定相互对应，重组时一并检查例子和例外。对文章质量的评估使用[固定任务](../evals/README.md)。
+Skill 格式依据 [Agent Skills 规范](https://agentskills.io/specification)。YAML 解析使用 [PyYAML](https://pyyaml.org/wiki/PyYAMLDocumentation)。仓库改动见 [CONTRIBUTING.md](../CONTRIBUTING.md)。写作质量评估见 [evals/README.md](../evals/README.md)。
 
-Skill 格式依据 [Agent Skills 规范](https://agentskills.io/specification)。YAML 解析使用 [PyYAML](https://pyyaml.org/wiki/PyYAMLDocumentation)。

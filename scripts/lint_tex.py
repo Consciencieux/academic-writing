@@ -10,7 +10,7 @@ from pathlib import Path
 
 from language_checks import abstract_words, language_hints, repeated_subject, table_cell_hints
 
-SKIP_DIRS = {'build', 'dist', '.git', 'node_modules', 'aux', 'out', '__pycache__'}
+SKIP_DIRS = {'build', 'dist', '.git', 'node_modules', 'aux', 'out', '__pycache__', '_minted'}
 LEVELS = {'info': 0, 'warn': 1, 'error': 2, 'never': 3}
 CODE_BEGIN = re.compile(r'\\begin\{(verbatim\*?|Verbatim|lstlisting|minted|code)\}')
 INPUT = re.compile(r'\\(?:input|include)\s*\{([^}]+)\}')
