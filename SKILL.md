@@ -23,16 +23,18 @@ compatibility: >-
 
 1. 研究问题与写作目标
 2. 论证与证据规划
-3. 结构与篇幅规划 → 调用 guide
-4. 章节写作与图表设计 → 调用 guide
-5. 规则审查与修订 → 调用 academic-writing-audit
+3. 结构与篇幅规划 → 调用 guide（正向写作）
+4. 章节写作与图表设计 → 调用 guide（正向写作）
+5. 规则审查与修订 → 调用 academic-writing-audit（审查后置：完整章节 / 重大结构调整 / 交付前）
 6. 格式与提交前检查
+
+写作阶段优先用 guide 生成成熟正文；不要用反复 Audit→修补替代正向写作。
 
 ## 调用
 
 | 任务 | Skill |
 | --- | --- |
-| 审查已有文稿（证据、语言、结构、SSOT） | `skills/academic-writing-audit` |
-| 正面写作指导（从提纲到正文） | `skills/academic-writing-guide` |
+| 正向写作（起草 / 改写 / 扩写 / 压缩 / 润色；核心约束 + 按任务加载规则） | `skills/academic-writing-guide` |
+| 审查已有文稿（证据、语言、结构、SSOT；后置） | `skills/academic-writing-audit` |
 
 规则权威源见 `shared/rules/`。各 Skill 只用指针引用，不复制条文。
