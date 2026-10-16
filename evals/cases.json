@@ -9,8 +9,10 @@
     ],
     "standards": [
       "EVID-02",
-      "EVID-06",
-      "PROSE-06"
+      "EVID-12",
+      "PROSE-07",
+      "PROSE-09",
+      "PROSE-13"
     ],
     "expected": [
       "中位数 A=100、B=90 ms，降低10%",
@@ -31,7 +33,7 @@
     ],
     "standards": [
       "EVID-01",
-      "EVID-05"
+      "EVID-09"
     ],
     "expected": [
       "得到2并给有效代数推导"
@@ -50,8 +52,8 @@
     ],
     "standards": [
       "PROSE-02",
-      "PROSE-05",
-      "ORG-04"
+      "PROSE-06",
+      "ORG-05"
     ],
     "expected": [
       "保留必要背景与桥接逻辑",
@@ -73,6 +75,7 @@
     "standards": [
       "ORG-01",
       "ORG-02",
+      "ORG-09",
       "ORG-03"
     ],
     "expected": [
@@ -139,8 +142,8 @@
       "fixtures/materials.md"
     ],
     "standards": [
-      "ORG-02",
-      "PROSE-07",
+      "ORG-09",
+      "PROSE-08",
       "EVID-02",
       "CONS-02",
       "CONS-05"
@@ -165,9 +168,10 @@
       "fixtures/valid-passages.md"
     ],
     "standards": [
-      "PROSE-04",
-      "PROSE-05",
-      "PROSE-07",
+      "PROSE-08",
+      "PROSE-11",
+      "PROSE-12",
+      "PROSE-06",
       "CITE-03",
       "CONS-04"
     ],
@@ -189,7 +193,7 @@
       "fixtures/paper-with-issues.md"
     ],
     "standards": [
-      "ORG-02",
+      "ORG-09",
       "CONS-05"
     ],
     "expected": [
@@ -234,7 +238,7 @@
     "standards": [
       "CONS-02",
       "CONS-03",
-      "ORG-02"
+      "ORG-09"
     ],
     "expected": [
       "Audit只诊断，Guide实际修改",
@@ -256,7 +260,7 @@
       "fixtures/measurements.csv"
     ],
     "standards": [
-      "PROSE-07",
+      "PROSE-08",
       "EVID-01"
     ],
     "expected": [
@@ -298,7 +302,8 @@
     ],
     "standards": [
       "CITE-06",
-      "ORG-07"
+      "ORG-10",
+      "ORG-15"
     ],
     "expected": [
       "完成可做的通用整理",
@@ -308,6 +313,295 @@
       "虚构审批/公开链接",
       "把所有通用栏目都强塞进正文",
       "宣称已满足某期刊"
+    ]
+  },
+  {
+    "id": "Z01",
+    "role": "guide",
+    "task": "根据材料写一段中文方法，不添加实验结论。",
+    "fixtures": [
+      "fixtures/chinese-material.md"
+    ],
+    "standards": [
+      "PROSE-03",
+      "PROSE-11",
+      "PROSE-12",
+      "EVID-01"
+    ],
+    "expected": [
+      "把实际队列和四线程限制写成完整句子",
+      "明确对象、动作与关系",
+      "实际读取完整语言规范"
+    ],
+    "avoid": [
+      "复制电报体或给抽象词换同义词",
+      "添加性能、稳定性、价值宣称",
+      "正文出现随意加粗"
+    ]
+  },
+  {
+    "id": "Z02",
+    "role": "audit",
+    "task": "检查草稿的中文表达并定位需要改写的地方，先不要改文件。",
+    "fixtures": [
+      "fixtures/chinese-material.md"
+    ],
+    "standards": [
+      "PROSE-03",
+      "PROSE-09",
+      "PROSE-11",
+      "PROSE-12",
+      "PROSE-13"
+    ],
+    "expected": [
+      "指出具体黑话、电报体、机械方面体、装饰加粗引号、括号挂载",
+      "给出由现有事实支持的改写方向"
+    ],
+    "avoid": [
+      "只说语言可优化",
+      "把确认问题全列成可选风格",
+      "凭关键词直接定为事实造假"
+    ]
+  },
+  {
+    "id": "Z03",
+    "role": "guide",
+    "task": "清理正文的强调格式，保持实际事实不变。",
+    "fixtures": [
+      "fixtures/chinese-material.md",
+      "fixtures/chinese-valid.md"
+    ],
+    "standards": [
+      "PROSE-09"
+    ],
+    "expected": [
+      "去掉普通正文结论词的装饰性加粗和引号",
+      "保留表头字段层级及术语讨论所需引号"
+    ],
+    "avoid": [
+      "把所有粗体与引号机械删除",
+      "再在别的普通词上加黑"
+    ]
+  },
+  {
+    "id": "Z04",
+    "role": "guide",
+    "task": "把表格草稿整理成适合论文的文字或表格。",
+    "fixtures": [
+      "fixtures/bad-tables.md"
+    ],
+    "standards": [
+      "VIS-01",
+      "VIS-03",
+      "PROSE-12"
+    ],
+    "expected": [
+      "先判断表格必要性",
+      "识别日志、状态和方法混行及不同指标混列",
+      "长论证移回正文"
+    ],
+    "avoid": [
+      "仅缩短单元格或缩小字号",
+      "继续用同一项目说明表混装不同业务逻辑",
+      "改成电报体"
+    ]
+  },
+  {
+    "id": "Z05",
+    "role": "audit",
+    "task": "检查这些表格的语义和阅读效果，不修改。",
+    "fixtures": [
+      "fixtures/bad-tables.md"
+    ],
+    "standards": [
+      "VIS-03",
+      "VIS-05"
+    ],
+    "expected": [
+      "指出具体行列维度不一致和完整段落塞入单元格",
+      "给明确的拆分或正文方案"
+    ],
+    "avoid": [
+      "只统计行数",
+      "没有渲染却说版面已通过",
+      "因表格少而自动保留"
+    ]
+  },
+  {
+    "id": "Z06",
+    "role": "guide",
+    "task": "为给定的点图写中文图注。",
+    "fixtures": [
+      "fixtures/caption-material.md"
+    ],
+    "standards": [
+      "PROSE-07",
+      "PROSE-09",
+      "VIS-04",
+      "EVID-12"
+    ],
+    "expected": [
+      "图注任务也加载完整语言标准",
+      "说明三次测量、单位与中位数线",
+      "表达为自然中文"
+    ],
+    "avoid": [
+      "只加载图表标准",
+      "使用图注证明稳定性或显著性",
+      "添装饰粗体、重复免责声明"
+    ]
+  },
+  {
+    "id": "Z07",
+    "role": "guide",
+    "task": "依据来源卡 S1 写一段中文相关工作，不补造书目信息。",
+    "fixtures": [
+      "fixtures/materials.md"
+    ],
+    "standards": [
+      "PROSE-03",
+      "PROSE-11",
+      "CITE-01",
+      "CITE-02"
+    ],
+    "expected": [
+      "专项资料任务叠加中文语言规范",
+      "只使用实际摘要支持的内容"
+    ],
+    "avoid": [
+      "因任务叫相关工作而跳过语言规范",
+      "转成抽象能力体系或字段表"
+    ]
+  },
+  {
+    "id": "Z08",
+    "role": "coordinator",
+    "task": "彻底移除示例方案中的快速回放、QuickReplay、replay_stage及其配置说明；不需要保留历史说明。基础队列不变。",
+    "fixtures": [
+      "fixtures/delete-scope/README.md",
+      "fixtures/delete-scope/config.json",
+      "fixtures/delete-scope/figures/diagram-source.txt",
+      "fixtures/delete-scope/figures/rendered-caption.txt",
+      "fixtures/delete-scope/paper/abstract.txt",
+      "fixtures/delete-scope/paper/detail.tex",
+      "fixtures/delete-scope/paper/main.tex",
+      "fixtures/delete-scope/prompts/review.txt",
+      "fixtures/delete-scope/tests/replay-case.txt"
+    ],
+    "standards": [
+      "CONS-04",
+      "CONS-03"
+    ],
+    "expected": [
+      "读取并清理正文、摘要、配置、注释、提示词、测试、文件名和图件源及生成说明",
+      "移除否定式残留",
+      "再次按同范围搜索全部别名",
+      "处理悬空标题及回指"
+    ],
+    "avoid": [
+      "只改main.tex",
+      "写成QuickReplay已移除",
+      "擅自新增迁移文档",
+      "把搜索错误当无命中"
+    ]
+  },
+  {
+    "id": "Z09",
+    "role": "audit",
+    "task": "检查正常段落，只报告有具体依据的问题。",
+    "fixtures": [
+      "fixtures/chinese-valid.md"
+    ],
+    "standards": [
+      "PROSE-08",
+      "PROSE-09",
+      "PROSE-11",
+      "PROSE-06"
+    ],
+    "expected": [
+      "保留定义中的闭环术语与必要指标限制",
+      "表头加粗不误报成装饰正文"
+    ],
+    "avoid": [
+      "把术语词表当禁词",
+      "要求删掉所有否定或所有加粗",
+      "为给出问题硬造缺陷"
+    ]
+  },
+  {
+    "id": "Z10",
+    "role": "guide",
+    "task": "先写方法段，再按后续轮次继续。",
+    "fixtures": [
+      "fixtures/chinese-material.md"
+    ],
+    "standards": [
+      "PROSE-03",
+      "PROSE-11",
+      "PROSE-12",
+      "CONS-05"
+    ],
+    "expected": [
+      "每轮保持中文共同规范",
+      "章节切换刷新任务与短核心",
+      "恢复后回读入口与完整语言规范",
+      "不复制状态卡进正文"
+    ],
+    "avoid": [
+      "写到后半篇重新出现电报体或加黑",
+      "每段重读全部六类标准",
+      "只凭已读标记宣称掌握全文"
+    ],
+    "turns": [
+      "写方法段。",
+      "现在只根据同一材料写摘要，不增加结果。",
+      "写说明中位耗时的结果段。",
+      "模拟新会话：仅提供上轮正文文件与状态路径，继续写图注；实际回读必要资源。"
+    ]
+  },
+  {
+    "id": "Z11",
+    "role": "guide",
+    "task": "把草稿改写为连贯的中文论文段落，保留关键条件。",
+    "fixtures": [
+      "fixtures/chinese-material.md"
+    ],
+    "standards": [
+      "PROSE-02",
+      "PROSE-04",
+      "PROSE-05",
+      "PROSE-06",
+      "PROSE-13",
+      "PROSE-14"
+    ],
+    "expected": [
+      "还原主要条件与谓语",
+      "消除无信息的换言之和连续总结",
+      "保留网络不计入指标的必要边界"
+    ],
+    "avoid": [
+      "换一个否定句继续尾挂",
+      "以短为目标删掉指标边界",
+      "把长括号改成另一串破折号"
+    ]
+  },
+  {
+    "id": "Z12",
+    "role": "guide",
+    "task": "只调整已有表格的列宽，保持全部文字和数值不变。",
+    "fixtures": [
+      "fixtures/chinese-valid.md"
+    ],
+    "standards": [
+      "VIS-05"
+    ],
+    "expected": [
+      "只读取实际工具与版式材料，按要求不改正文",
+      "查看可获得成品"
+    ],
+    "avoid": [
+      "把纯列宽任务扩成文献核查或全文改写",
+      "捏造已渲染状态"
     ]
   }
 ]

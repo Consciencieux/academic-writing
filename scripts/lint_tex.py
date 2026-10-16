@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static LaTeX candidates, not a compiler or a semantic judge (Python 3.8+).
+"""Static LaTeX candidates, not a compiler or a semantic judge (Python 3.11+, stdlib).
 
 Static roots are inspected independently; comments and common code environments
 are masked. Dynamic TeX, external labels and complex bibliography expressions
@@ -16,6 +16,8 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+from language_checks import abstract_words, language_hints, repeated_subject, table_cell_hints
+
 SKIP_DIRS = {'build', 'dist', '.git', 'node_modules', 'aux', 'out', '__pycache__'}
 LEVELS = {'info': 0, 'warn': 1, 'error': 2, 'never': 3}
 CODE_BEGIN = re.compile(r'\\begin\{(verbatim\*?|Verbatim|lstlisting|minted|code)\}')
@@ -28,17 +30,6 @@ BIB = re.compile(r'\\(?:addbibresource(?:\[[^\]]*\])?|bibliography)\s*\{([^}]+)\
 BIB_KEY = re.compile(r'@(?!(?:comment|string|preamble)\b)\w+\s*\{\s*([^,\s]+)', re.I)
 MACRO = re.compile(r'\\newcommand\*?\s*\{?\\([A-Za-z@]+)\}?\s*\{([^{}]+)\}')
 VALUE = re.compile(r'(?<!\d)(?:\d{4}-\d{2}-\d{2}|\d+(?:\.\d+)?\\?%|\d+\.\d+)(?!\d)')
-# Candidate detectors; their contents are not normative forbidden-word lists.
-HINTS = (
-    ('L-META', 'PROSE-08', r'本节将|本节主要|下面介绍|综上所述', '确认元话语是否有导航作用'),
-    ('L-INNER', 'PROSE-07', r'Agent\s*已完成|上次.{0,8}讨论|按要求修改|prompt|payload|fallback',
-     '确认是必要研究内容还是执行往返'),
-    ('L-NEG', 'PROSE-05', r'，(?:并非|而不是|不意味着)|。\s*(?:并非|不意味着)',
-     '确认否定部分是否改变理解或范围'),
-    ('C-OVERCLAIM', 'EVID-02', r'显著|充分证明|决定性|核心原因|必然', '确认证据支持此强度；词语本身不是错误'),
-    ('C-ZERO', 'EVID-03', r'(?:缺失|未知|未披露|提取失败)[^。]{0,14}(?:为|等于|=|是)\s*0',
-     '核对零值与缺失的关系，包括合法否定和反例'),
-)
 
 
 def strip_comment(line):
@@ -128,6 +119,78 @@ def closure(root, cache):
     return sorted(visited), unresolved
 
 
+
+def scan_language(path, lines, words, add, max_comma):
+    """Scan paragraph units and simple tabular rows while preserving locations."""
+    paragraph, start = [], 0
+    table, table_header, row, row_start, rows = False, False, [], 0, 0
+    title_pending = False
+
+    def hints(text, number, in_table=False):
+        for code, standard, message in language_hints(text, words, table=in_table, max_comma=max_comma):
+            add(path, number, 'info', code, standard, message, text)
+        if not in_table:
+            subject = repeated_subject(text)
+            if subject:
+                add(path, number, 'info', 'L-SUBJECT', 'PROSE-14',
+                    '连续以“{}”开头，检查是否机械重复'.format(subject), text)
+
+    def flush():
+        nonlocal paragraph
+        if paragraph:
+            hints(''.join(paragraph), start)
+            paragraph = []
+
+    for number, line in enumerate(lines, 1):
+        if re.search(r'\\begin\{(?:tabular\*?|tabularx|longtable)\}', line):
+            flush(); table, table_header, row, rows = True, True, [], 0
+            continue
+        if re.search(r'\\end\{(?:tabular\*?|tabularx|longtable)\}', line):
+            if row and not table_header:
+                text = ' '.join(row)
+                hints(text, row_start, True)
+                for code, standard, message in table_cell_hints(re.split(r'(?<!\\)&', text)):
+                    add(path, row_start, 'info', code, standard, message, text)
+            table, row = False, []
+            continue
+        if table:
+            if re.match(r'\s*\\(?:toprule|midrule|bottomrule|hline|cmidrule)\b', line):
+                if '\\midrule' in line:
+                    table_header = False
+                continue
+            if not line.strip():
+                continue
+            if not row:
+                row_start = number
+            row.append(line.strip())
+            if re.search(r'\\\\(?:\[.*?\])?\s*$', line):
+                text = ' '.join(row)
+                if not table_header:
+                    hints(text, row_start, True)
+                    for code, standard, message in table_cell_hints(re.split(r'(?<!\\)&', text)):
+                        add(path, row_start, 'info', code, standard, message, text)
+                    rows += 1
+                    if rows == 21:
+                        add(path, row_start, 'info', 'T-LONG', 'VIS-03',
+                            '表格记录较多，检查分组、跨页与必要性；不是长度违规')
+                table_header, row = False, []
+            continue
+        if re.match(r'\s*\\(?:chapter|section|subsection|subsubsection)\b', line):
+            flush(); title_pending = True; continue
+        if re.match(r'\s*\\(?:documentclass|usepackage|newcommand|renewcommand|providecommand|input|include|label|begin|end|addbibresource|bibliography|hypersetup|setlength)\b', line):
+            flush(); continue
+        if not line.strip():
+            flush(); continue
+        if title_pending:
+            if re.match(r'\s*本(?:章|节|部分)', line):
+                add(path, number, 'info', 'L-TITLE-ECHO', 'PROSE-10', '标题后组织播报，检查是否复述标题', line)
+            title_pending = False
+        if not paragraph:
+            start = number
+        paragraph.append(line.strip())
+    flush()
+
+
 def analyze(paths, all_files=False, max_comma=6):
     tex = collect(paths)
     cache = {path: masked_lines(path) for path in tex}
@@ -156,18 +219,9 @@ def analyze(paths, all_files=False, max_comma=6):
     for path in sorted(set(tex)-active):
         add(path, 0, 'info', 'S-OUTSIDE', 'CONS-04',
             '不在所识别根文件的静态集合内；可能是独立片段，不据此删除')
+    words = abstract_words()
     for path in sorted(active):
-        for number, line in enumerate(cache[path], 1):
-            if not line.strip():
-                continue
-            structural = bool(re.match(r'\s*\\(?:chapter|section|subsection|caption|newcommand)\b', line))
-            if structural:
-                continue
-            for code, standard, pattern, message in HINTS:
-                if re.search(pattern, line):
-                    add(path, number, 'info', code, standard, message, line.strip())
-            if any(s.count('，') >= max_comma for s in re.split('[。！？]', line)):
-                add(path, number, 'info', 'L-LONGSENT', 'PROSE-03', '逗号较多，人工判断逻辑密度', line)
+        scan_language(path, cache[path], words, add, max_comma)
     for root, members in units:
         labels, refs, cites = defaultdict(list), [], []
         bibliography, values = set(), []
@@ -225,7 +279,7 @@ def main(argv=None):
     parser.add_argument('paths', nargs='+')
     parser.add_argument('--all-files', action='store_true')
     parser.add_argument('--max-comma', type=int, default=6, help='candidate threshold, not a correctness boundary')
-    parser.add_argument('--severity', choices=('info', 'warn', 'error'), default='warn')
+    parser.add_argument('--severity', choices=('info', 'warn', 'error'), default='info')
     parser.add_argument('--fail-on', choices=('never', 'info', 'warn', 'error'), default='error')
     parser.add_argument('--json', action='store_true')
     args = parser.parse_args(argv)
@@ -235,7 +289,8 @@ def main(argv=None):
         result = analyze(args.paths, args.all_files, args.max_comma)
     except (OSError, ValueError, UnicodeError) as error:
         print('ERROR: {}'.format(error), file=sys.stderr); return 2
-    shown = [f for f in result['findings'] if LEVELS[f['severity']] >= LEVELS[args.severity]]
+    all_findings = result['findings']
+    shown = [f for f in all_findings if LEVELS[f['severity']] >= LEVELS[args.severity]]
     result['findings'] = shown
     if args.json:
         print(json.dumps(result, ensure_ascii=False, indent=2))
@@ -243,8 +298,10 @@ def main(argv=None):
         for item in shown:
             print('[{severity}] {path}:{line} {code} ({standard}) {message}'.format(**item))
         print('静态候选 {} 项；语义、证据与真实编译结果需另行确认。'.format(len(shown)))
-    return int(any(LEVELS[f['severity']] >= LEVELS[args.fail_on] for f in shown))
+    return int(any(LEVELS[f['severity']] >= LEVELS[args.fail_on] for f in all_findings))
 
 
 if __name__ == '__main__':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
     sys.exit(main())

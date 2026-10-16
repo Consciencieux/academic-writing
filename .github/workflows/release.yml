@@ -19,7 +19,7 @@ jobs:
           if not re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?', tag):
               raise SystemExit('Expected vMAJOR.MINOR.PATCH[-prerelease]')
           marker = '## [' + tag[1:] + '] - '
-          if not any(line.startswith(marker) for line in pathlib.Path('CHANGELOG.md').read_text().splitlines()):
+          if not any(line.startswith(marker) for line in pathlib.Path('CHANGELOG.md').read_text(encoding='utf-8').splitlines()):
               raise SystemExit('Missing matching dated changelog entry')
           PYCODE
       - name: Regression tests

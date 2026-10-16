@@ -1,0 +1,1 @@
+测试 QuickReplay 在 replay_stage 打开时读取记录。

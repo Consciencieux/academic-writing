@@ -1,43 +1,24 @@
 # Academic Writing
 
-学术论文写作与审查的三 Skill 体系。以论证、证据和读者理解组织文章，避免依赖反复“生成—全篇检查—局部补丁”。
+中文学术论文写作与审查。重点处理黑话、电报体、装饰性加粗、长句与括号堆叠、表格滥用、章节重复和内容删除不彻底。
 
-## 使用哪一个入口
+## 使用
 
-| 任务 | Skill | 产物 |
-| --- | --- | --- |
-| 起草、续写、修改、篇幅规划、文献综合、图表、投稿整理 | academic-writing-guide | 实际正文/源文件及必要修改说明 |
-| 全文通读、跨章结构与重复、证据/文献/图表检查 | academic-writing-audit | 只读诊断与明确处理判断 |
-| 多步骤写作或检查后修订 | academic-writing | 协调上述角色，不另写一套方法 |
+- `academic-writing-guide`：规划、写作、续写、修订、图表、引证和完整删除。
+- `academic-writing-audit`：只读通读与诊断，输出位置、依据和明确处理建议。
+- `academic-writing`：多步骤任务协调；检查并修改时按已有授权交接。
 
-Guide 是正文的唯一编辑角色。Audit 可以给改法示例，但不修改文稿；联合请求由协调入口接续 Guide，不再让用户重复授权同一修改范围。角色不等于独立进程，不要求多 Agent。
+同一个 Agent 可顺序执行这些角色。普通段落写作不逐段启动独立全文审查。
 
-## 内容怎么拆
+## 规则怎样进入写作
 
-- [共享核心](shared/core.md)：短的共同底线，自动同步到 Guide/Audit 入口。
-- `shared/standards/`：按证据、组织、语言、图表、引证和事实一致性维护唯一判定标准；同时包含硬约束、条件要求和可调整默认值。
-- `skills/academic-writing-guide/references/`：按当前要做的写作决定提供方法，文章各章节作为第二导航轴。
-- `shared/protocols/`、`shared/tooling/`：上下文与角色交接、文稿工具的操作方式。
-- `evals/`、`tests/`：模型行为用例与确定性测试；二者的通过含义不同。
+执行入口内嵌[短核心](shared/core.md)。凡生成中文正文、相关工作、摘要、图注或表内说明，完整读取[语言规则](shared/standards/prose.md)和成文方法；再按当前动作读取内容判断、组织、图表、引证或删除要求。
 
-篇幅归论证与章节规划，图表及引证有专项方法；它们不是独立 Skill。规则不按“正面/负面”分库，审查清单不另抄一套判定条文。详见[架构](docs/architecture.md)。
+详细规范保留具体词表、错误句式、例外和判定测试。默认不把所有文件一次读进上下文，也不靠一句“保持自然”代替规范。章节切换刷新当前问题与短核心，上下文重置后重读必需资源。具体结构见[架构说明](docs/architecture.md)。
 
-## 安装
+## 构建与安装
 
-```bash
-python scripts/package_skills.py --check-only
-python scripts/package_skills.py --output-dir dist
-```
-
-默认使用 `dist/academic-writing-skills.zip`：解压后为三个并列的完整 Skill 目录，放入客户端实际支持的 Skills 目录。具体激活方式以客户端为准。`guide.zip` 和 `audit.zip` 的完整文件名分别为 `academic-writing-guide.zip`、`academic-writing-audit.zip`，用于只需要该角色的场景；专项包不假装另一角色已经安装。
-
-仓库根 [SKILL.md](SKILL.md) 是协调入口源码，构建时放入 `academic-writing/`。所有安装包包含所需规则、方法、脚本和模板；构建器改写并验证真实相对链接。
-
-仅复制 SKILL.md 不构成安装。直接从源码使用时应保留整个仓库布局。把[论文项目指令片段](assets/project-AGENTS.snippet.md)合并进论文自己的 AGENTS.md，可帮助持续选中正确角色；不要用本仓库的维护 AGENTS.md 覆盖论文项目。
-
-## 维护与验证
-
-修改共享核心后运行 `python scripts/package_skills.py --sync`，提交生成后的入口。标准使用稳定 ID 和显式锚点；修改口径同时更新相关 evals 用例和 CHANGELOG。
+使用 Python 3.11 或更新版本，运行：
 
 ```bash
 python -m unittest discover -s tests -v
@@ -45,4 +26,23 @@ python scripts/package_skills.py --check-only
 python scripts/package_skills.py --output-dir dist
 ```
 
-[评估方案](evals/README.md)提供固定材料、任务和预期，包括正常表达的误报反例。自动测试检查包结构与工具行为，不能证明模型初稿质量。运行产物不要提交进仓库。
+生成 `academic-writing-guide.zip`、`academic-writing-audit.zip` 和 `academic-writing-skills.zip`。合集解压为三个并列 Skill 目录；按客户端支持的方式安装完整目录，不能只复制 SKILL.md。
+
+各执行包包含完整标准、方法、工具和模板；资源路径在构建时改写并检查。论文项目可采用[项目指令片段](assets/project-AGENTS.snippet.md)，不要把本仓库维护指令覆盖到论文项目。
+
+## 候选检查
+
+```bash
+python /path/to/skill/scripts/lint_tex.py /path/to/paper
+python /path/to/skill/scripts/lint_text.py /path/to/paper.md
+```
+
+默认显示语言候选。`--severity warn` 可筛选显示级别，`--fail-on warn` 可提高失败门槛；候选仍须结合语义核对。Markdown/纯文本和 TeX 共用中文模式检查，支持代码屏蔽、普通正文加粗、抽象词、短语堆叠、括号、重复提示与长表单元格等。
+
+这些工具不进行语义自动改写，不承诺识别所有坏句。完整删除按[CONS-04](shared/standards/consistency.md#cons-04)搜索实际授权范围及别名，并复查文本、文件名和相关生成物。
+
+## 维护与实际评估
+
+修改核心后执行 `python scripts/package_skills.py --sync`。规范内容改动时更新对应候选和[行为用例](evals/README.md)，不得只验证“还有这个关键词”。
+
+自动测试与模型行为测试分开：前者验证文件和工具，后者记录初稿、误报/漏报、中文自然度、规则读取以及长任务退化。本仓库不以静态测试通过宣称模型已充分遵守全部规则。
