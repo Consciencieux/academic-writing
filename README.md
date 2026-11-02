@@ -10,6 +10,12 @@
 
 论文项目可把[项目指令片段](assets/project-AGENTS.snippet.md)并入自己的 AGENTS.md。
 
+## 论文题名与章节标题
+
+拟题、修改目录或精简小标题可直接使用 Guide。它按研究对象、必要范围和章节职责形成名称，提供[标题方法](skills/academic-writing-guide/references/headings.md)及材料示例。Audit 根据[组织标准](shared/standards/organization.md)检查完整的 14 类标题问题，包括朴素措辞中的内容模糊和搭配失真。
+
+主标题与小标题分别处理；长度参考不代替研究范围和语义判断。只改标题时，正文、数据和引用保持原有内容。
+
 ## 安装
 
 从 [Releases](https://github.com/Consciencieux/academic-writing/releases) 下载 `academic-writing-skills.zip`，解压后得到三个完整 Skill 目录，放入客户端支持的 Skills 位置。只要单一角色时用 `academic-writing-guide.zip` 或 `academic-writing-audit.zip`。

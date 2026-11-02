@@ -15,7 +15,7 @@ python /path/to/skill/scripts/lint_tex.py /path/to/paper --json
 
 [文本检查器](../../scripts/lint_text.py)扫描 Markdown 和纯文本，[TeX 检查器](../../scripts/lint_tex.py)扫描静态包含文件。两者使用[共同语言模式](../../scripts/language_checks.py)，返回位置、规则 ID 和待核对内容。
 
-Markdown 扫描正文和表体，屏蔽代码、引用块、标题与表头。TeX 扫描已识别段落和表格行，屏蔽代码环境。语言覆盖黑话密集、短语堆叠、强调、括号、重复和长单元格；语义审查同时阅读被屏蔽的有关内容。
+Markdown 扫描正文和表体，屏蔽代码、引用块、标题与表头。TeX 扫描已识别段落和表格行，屏蔽代码环境。语言覆盖黑话密集、短语堆叠、强调、括号、重复和长单元格；语义审查同时阅读被屏蔽的有关内容。论文题名与章节标题按[ORG-04](../standards/organization.md#org-04)和[ORG-08](../standards/organization.md#org-08)结合正文判读，现有扫描器不提供标题合格结论。
 
 `--max-comma` 设置单句逗号提示阈值。文本检查器的 `--max-cell` 设置单元格长度提示阈值。`--severity` 筛选显示级别，`--fail-on` 设置全部扫描结果的失败门槛。退出码：0 为低于门槛，1 为达到门槛，2 为输入或资源读取失败。
 

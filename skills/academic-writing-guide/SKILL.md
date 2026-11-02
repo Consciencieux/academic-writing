@@ -1,6 +1,6 @@
 ---
 name: academic-writing-guide
-description: 中文学术论文的规划、起草、续写、改写、扩写、压缩、润色、翻译、资料综合、图表与引文整理，以及完整删除和修订。交付授权范围内的正文和源文件。
+description: 中文学术论文的拟题、章节命名、规划、起草、续写、改写、扩写、压缩、润色、翻译、资料综合、图表与引文整理，以及完整删除和修订。交付授权范围内的正文和源文件。
 ---
 
 # 学术写作与修订
@@ -25,12 +25,15 @@ description: 中文学术论文的规划、起草、续写、改写、扩写、�
 
 完整读取、截断接续、资源复用与回读范围依[上下文协议](../../shared/protocols/context.md)。标题、摘要、搜索片段和锚点只用于导航，不能替代所在文件。
 
+题名和章节名称根据实际研究内容命名。仅拟题或改标题时，按下表读取标题方法、组织与语言标准；有研究判断时加读证据标准，不把题名任务自动扩展为正文重写或全文审查。
+
 ## 按当前操作加载
 
 在对应操作开始前完整读取匹配资料；同一操作匹配多行时合并读取，重复文件只读一次。转入新的操作时补读新增资料，后续任务的资料在实际进入该任务时加载。
 
 | 当前操作 | 完整读取的专项材料 |
 | --- | --- |
+| 论文题名、目录与各级章节标题 | [标题方法](references/headings.md)、[组织标准](../../shared/standards/organization.md)、[语言标准](../../shared/standards/prose.md)；题名涉及发现、比较或贡献时另读[证据标准](../../shared/standards/evidence.md) |
 | 形成事实表述、计算、解释或结论 | [证据标准](../../shared/standards/evidence.md) |
 | 章节分工、多段组织、全篇重组、篇幅分配 | [论证设计](references/argument-design.md)、[组织标准](../../shared/standards/organization.md)；整章写作另完整读取[章节方法](references/section-moves.md)，成文时使用对应章节的方法 |
 | 文献综合、引用增补、来源核对 | [资料方法](references/source-work.md)、[引证标准](../../shared/standards/citations.md)、[证据标准](../../shared/standards/evidence.md) |

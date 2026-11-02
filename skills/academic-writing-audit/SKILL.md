@@ -1,6 +1,6 @@
 ---
 name: academic-writing-audit
-description: 只读审查中文学术文稿。检查全文分工、重复、篇幅、证据与引文，识别黑话、电报体、装饰性强调、冗余否定、混乱表格及删除残留，给出位置、依据和明确处理建议。
+description: 只读审查中文学术文稿。检查论文题名、章节命名、全文分工、重复、篇幅、证据与引文，识别黑话、电报体、装饰性强调、冗余否定、混乱表格及删除残留，给出位置、依据和明确处理建议。
 ---
 
 # 学术文稿审查
@@ -25,6 +25,7 @@ description: 只读审查中文学术文稿。检查全文分工、重复、篇�
 
 | 检查对象 | 完整读取的材料 |
 | --- | --- |
+| 论文题名、目录、章节标题及其范围 | [组织](../../shared/standards/organization.md)、[语言](../../shared/standards/prose.md)；标题包含结论、比较或贡献时另读[证据](../../shared/standards/evidence.md) |
 | 中文句段、黑话、电报体、强调、否定与重复 | [语言](../../shared/standards/prose.md) |
 | 事实、推断、计算、评价、结论范围 | [证据](../../shared/standards/evidence.md) |
 | 章节职责、内容散落、篇幅、空栏目 | [组织](../../shared/standards/organization.md) |

@@ -98,6 +98,9 @@ class RepositoryTests(unittest.TestCase):
                 for role in roles:
                     base = dst / role
                     self.assertEqual((base / 'shared/core.md').read_bytes(), (ROOT / 'shared/core.md').read_bytes())
+                    self.assertIn('ORG-08', (base / 'shared/standards/organization.md').read_text(encoding='utf-8'))
+                    if role == 'academic-writing-guide':
+                        self.assertTrue((base / 'references/headings.md').is_file())
                     sample = root / 'sample.md'
                     sample.write_text('实现队列化、并发化；完成链路化、流程化。**关键优势**。', encoding='utf-8')
                     result = subprocess.run([sys.executable, str(base / 'scripts/lint_text.py'), str(sample), '--json'], capture_output=True, encoding='utf-8', check=True)
